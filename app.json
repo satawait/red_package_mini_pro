@@ -1,6 +1,7 @@
 {
 	"pages": [
-		"pages/success_list/success_list",
+        
+        "pages/success_list/success_list",
         "pages/index/index",
 		"pages/share/share",
 		

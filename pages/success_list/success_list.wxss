@@ -87,6 +87,11 @@ page {
 	text-align: center;
 	color: #fff;
 	background: #089c2a;
+	min-width: 312rpx;
+}
+
+.record_sound_btn.disable {
+	background: rgba(255, 255, 255, .5);
 }
 
 .link_icon {

@@ -22,13 +22,14 @@
 				<text class="unit">元</text>
 			</view>
 			<navigator
-				url=""
+				url="/pages/coupon/coupon"
 				class="coupon_box" wx:if="rewardId != '0'">
 				<text class="coupon_tip">获得由{{brandInfo.brand_name}}额外赠送优惠券x1</text>
 				<image src="{{imgUrl}}success_list/link_icon.png" class="link_icon" mode="widthFix"></image>	
 			</navigator>
-		</view> 
-		<view wx:else class="record_sound_btn" bindtouchstart="beginRecord" bindtouchend="endRecord">按住说出以上口令领取赏金</view>
+		</view>
+		<view wx:elif="{{has_cancel <= 0}}" class="record_sound_btn" bindtouchstart="beginRecord" bindtouchend="endRecord">按住说出以上口令领取赏金</view>
+		<view wx:else class="record_sound_btn disable">口令已经失效了</view>
 
 		<view class="link_box">
 			<navigator url="/pages/index/index" class="link_item">
@@ -47,7 +48,7 @@
 	</view>
 	<view class="friend_list_box">
 		<view class="red_package_info">
-			共{{money}}元，已领取{{has_received}}/{{total_count}}个
+			共{{money}}元，已领取{{received_count}}/{{total_count}}个
 			<image src="{{imgUrl}}temp_logo.png" class="logo" mode="widthFix" style="width: {{logoWidth}}px" bindtap="play"></image>
 		</view>
 		<view class="friend_list">

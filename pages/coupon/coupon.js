@@ -11,14 +11,17 @@ Page({
 		// qrCode
 		// doubleLine
 		logoText: '歌莉娅',
-		couponText: '满5.01减5代金券',
+		couponText: app.globalData.rewardDesc,
 		imgUrl: app.globalData.imgUrl,
 	},
 
-	onLoad: function (options) {
+	onLoad: function(options) {
+		console.log(app.globalData);
 		const pathArg = Base64.encode(`/pages/index/index`);
 		const widthArg = Base64.encode('300');
-		const thumbArg = queryHelper.queryEncoded({ 'link': app.globalData.userInfo.avatarUrl });
+		const thumbArg = queryHelper.queryEncoded({
+			'link': app.globalData.userInfo.avatarUrl
+		});
 		const qrCode = `${CONFIG.interfaceDomin}${CONFIG.interfaceList.CREATE_QR_CODE}/${pathArg}&${widthArg}`;
 		const thumb = `${CONFIG.interfaceDomin}${CONFIG.interfaceList.PROXY_GET}/${thumbArg}`;
 
@@ -29,7 +32,7 @@ Page({
 		});
 	},
 
-	onShow: function () {
+	onShow: function() {
 		// setTimeout模拟接口延时~待数据返回后需根据优惠券文字~判断是一行还是两行~对应设置canvas高度
 		setTimeout(() => {
 			this.init();
@@ -38,7 +41,7 @@ Page({
 
 	init: function() {
 		const that = this;
-		wx.createSelectorQuery().select('#qrCanvas').boundingClientRect(function (rect) {
+		wx.createSelectorQuery().select('#qrCanvas').boundingClientRect(function(rect) {
 			that.setData({
 				canvasWidth: rect.width,
 				canvasHeight: rect.height
@@ -47,7 +50,7 @@ Page({
 		}).exec();
 	},
 
-	drawImage: function () {
+	drawImage: function() {
 		const that = this;
 
 		wx.downloadFile({
@@ -81,7 +84,7 @@ Page({
 				couponTextArr.forEach((item, index) => {
 					that.writeText(ctx, item, canvasWidth / 2, couponTextY + index * 36, 30);
 				});
-				
+
 				wx.downloadFile({
 					url: that.data.thumb,
 					success(down_res) {
@@ -94,13 +97,13 @@ Page({
 		})
 	},
 
-	writeText: function (ctx, text, x, y, fontSize) {
+	writeText: function(ctx, text, x, y, fontSize) {
 		ctx.setTextAlign('center');
 		ctx.setFontSize(fontSize || 14);
 		ctx.fillText(text, x, y)
 	},
 
-	drawLogo: function (ctx, logoFilePath, x, y, r) {
+	drawLogo: function(ctx, logoFilePath, x, y, r) {
 		ctx.save(); // 保存当前ctx的状态
 		ctx.arc(x, y, r, 0, 2 * Math.PI);
 		ctx.clip(); //裁剪上面的圆形
@@ -108,10 +111,10 @@ Page({
 		ctx.restore();
 	},
 
-	saveImage: function () {
+	saveImage: function() {
 		wx.canvasToTempFilePath({
 			canvasId: 'qrCodeCanvas',
-			success: function (res) {
+			success: function(res) {
 				const filePath = res.tempFilePath;
 				console.log(filePath);
 

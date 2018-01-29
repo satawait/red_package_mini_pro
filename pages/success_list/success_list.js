@@ -19,8 +19,9 @@ Page({
 
 	},
 
-	onLoad: function (options) {
-		
+	onLoad: function(options) {
+		console.log(options, '------------------success list options');
+
 		if (app.globalData.userInfo) {
 			this.setData({
 				redpacketSendId: options.redpacket_send_id || '1071',
@@ -41,14 +42,14 @@ Page({
 		}
 	},
 
-	init: function () {
+	init: function() {
 		this.initLogo();
 		this.loadData();
 		this.authInit();
 	},
 
 	// 提前授权录音
-	authInit: function () {
+	authInit: function() {
 		recorderManager.start();
 		setTimeout(() => {
 			recorderManager.stop();
@@ -76,7 +77,7 @@ Page({
 		})
 	},
 
-	handleData: function (list) {
+	handleData: function(list) {
 		list.forEach((item) => {
 			item.money = this.getFloatStr(item.money);
 		});
@@ -84,9 +85,9 @@ Page({
 		return list;
 	},
 
-	initLogo: function () {
+	initLogo: function() {
 		const that = this;
-		wx.createSelectorQuery().in(this).select('.logo').boundingClientRect(function (rect) {
+		wx.createSelectorQuery().in(this).select('.logo').boundingClientRect(function(rect) {
 			if (rect) {
 				that.setData({
 					logoHeight: rect.bottom - rect.top
@@ -105,10 +106,10 @@ Page({
 		}).exec();
 	},
 
-	playAudio: function (e) {
+	playAudio: function(e) {
 		const index = e.currentTarget.dataset.index;
 		const audioUrl = this.data.received_list[index].audio_url;
-		
+
 		innerAudioContext.src = audioUrl;
 		innerAudioContext.play();
 
@@ -118,7 +119,7 @@ Page({
 			});
 			console.log('开始播放')
 		})
-		
+
 		innerAudioContext.onEnded(() => {
 			this.setData({
 				playingIndex: -1
@@ -141,7 +142,7 @@ Page({
 		this.start();
 	},
 
-	endRecord: function () {
+	endRecord: function() {
 		const duration = (new Date().getTime() - startTime) / 1000;
 
 		if (duration < 1) {
@@ -158,14 +159,14 @@ Page({
 		this.stop();
 	},
 
-	start: function () {
+	start: function() {
 		const options = {
-			duration: 10000,//指定录音的时长，单位 ms
-			sampleRate: 16000,//采样率
-			numberOfChannels: 1,//录音通道数
-			encodeBitRate: 96000,//编码码率
-			format: 'mp3',//音频格式，有效值 aac/mp3
-			frameSize: 50,//指定帧大小，单位 KB
+			duration: 10000, //指定录音的时长，单位 ms
+			sampleRate: 16000, //采样率
+			numberOfChannels: 1, //录音通道数
+			encodeBitRate: 96000, //编码码率
+			format: 'mp3', //音频格式，有效值 aac/mp3
+			frameSize: 50, //指定帧大小，单位 KB
 		}
 		//开始录音
 		recorderManager.start(options);
@@ -178,7 +179,7 @@ Page({
 		})
 	},
 
-	stop: function () {
+	stop: function() {
 		recorderManager.stop();
 		recorderManager.onStop((res) => {
 			this.setData({
@@ -190,7 +191,7 @@ Page({
 		})
 	},
 
-	upload: function () {
+	upload: function() {
 		wx.showLoading({
 			title: '识别中...',
 		});
@@ -229,7 +230,7 @@ Page({
 					this.setData({
 						rewardId: data.data.reward_id
 					});
-					
+
 					app.globalData.rewardName = data.reward_name;
 					app.globalData.rewardDesc = data.reward_desc;
 					app.globalData.rewardVoucher = data.reward_voucher;
@@ -240,7 +241,7 @@ Page({
 		})
 	},
 
-	play: function () {
+	play: function() {
 		innerAudioContext.autoplay = true
 		innerAudioContext.src = 'http://ws.stream.qqmusic.qq.com/M500001VfvsJ21xFqb.mp3?guid=ffffffff82def4af4b12b3cd9337d5e7&uin=346897220&vkey=6292F51E1E384E06DCBDC9AB7C49FD713D632D313AC4858BACB8DDD29067D3C601481D36E62053BF8DFEAF74C0A5CCFADD6471160CAF3E6A&fromtag=46',
 			innerAudioContext.onPlay(() => {
@@ -253,7 +254,7 @@ Page({
 	},
 
 	// 将数字转换为小数点后两位
-	getFloatStr: function (num) {
+	getFloatStr: function(num) {
 		num += '';
 		num = num.replace(/[^0-9|\.]/g, ''); //清除字符串中的非数字非.字符
 

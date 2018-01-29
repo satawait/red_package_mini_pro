@@ -138,7 +138,14 @@ Page({
 				brandId: this.data.brandInfo.id
 			},
 			successCb: (res) => {
-				this.toPay(res.data);
+				if (res.data.need_pay <= 0) {
+					console.log(`/pages/share/share?command=${encodeURI(this.data.playCommand).toLowerCase()}&redpacket_send_id=${res.data.redpacket_send_id}`)
+					wx.navigateTo({
+						url: `/pages/share/share?command=${encodeURI(this.data.playCommand).toLowerCase()}&redpacket_send_id=${res.data.redpacket_send_id}`
+					});
+				} else {
+					this.toPay(res.data);
+				}
 				console.log(res);
 			},
 			extendsOptions: {
@@ -157,9 +164,7 @@ Page({
 			'paySign': payInfo.pay_sign,
 			'signType': payInfo.sign_type,
 			'success': function(res) {
-				wx.navigateTo({
-					url: `/pages/share/share?command=${encodeURI(that.data.playCommand).toLowerCase()}&redpacket_send_id=${payInfo.redpacket_send_id}`
-				});
+				this.getPayStatus();
 			},
 			'fail': function(res) {
 
@@ -185,6 +190,28 @@ Page({
 					}
 				})
 			},
+		})
+	},
+
+	// 递归~每隔10秒调用一次接口获取支付状态~当支付状态为真时~才表示已经真正支付完毕~页面跳转到分享页面
+	getPayStatus: function() {
+		app.wxRequest({
+			interfaceName: CONFIG.interfaceList.GET_REDPACKET_ACTIVITY_STATUS,
+			reqData: {
+				userId: that.data.userInfo.user_id
+			},
+			successCb: (res) => {
+				if (res.data) {
+					wx.navigateTo({
+						url: `/pages/share/share?command=${encodeURI(that.data.playCommand).toLowerCase()}&redpacket_send_id=${payInfo.redpacket_send_id}`
+					});
+				} else {
+					setTimeout(() => {
+						this.getPayStatus();
+					}, 10000);
+				}
+				console.log(res);
+			}
 		})
 	},
 

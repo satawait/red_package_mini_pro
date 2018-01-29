@@ -48,6 +48,11 @@ const config = {
 		 */
 		"CANCEL_REDPACKET_ACTIVITY": "CancelRedpacketActivity",
 		/**
+		 * 获取发送红包的支付状态
+		 * {redpacketSendId}
+		 */
+		"GET_REDPACKET_ACTIVITY_STATUS": "GetRedpacketActivityStatus",
+		/**
 		 * 获取小程序码
 		 * {path}&{width}&{scene}
 		 */
@@ -62,7 +67,7 @@ const config = {
 		 * {redpacketSendId}&{userId}?brandId={brandId}
 		 */
 		"UPLOAD_VOICE": "Play/PlayAudio"
-		
+
 	}
 }
 

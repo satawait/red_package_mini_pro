@@ -19,11 +19,12 @@ Page({
 		});
 		const commandText = decodeURI(options.command);
 		const redpacketSendId = decodeURI(options.redpacket_send_id);
+		console.log(options, '--------------share options');
 		this.setData({
 			commandText: commandText,
 			redpacketSendId: redpacketSendId
 		});
-		const pathArg = Base64.encode(`pages/index/index`);
+		const pathArg = Base64.encode(`pages/success_list/success_list`);
 		const widthArg = Base64.encode('300');
 		const sceneArg = Base64.encode('temp.jpg');
 		const thumbArg = queryHelper.queryEncoded({
@@ -57,7 +58,7 @@ Page({
 
 	onShareAppMessage: function(res) {
 		return {
-			title: '福福福福福福福利',
+			title: '福福福福利利利利',
 			path: '/pages/success_list/success_list?redpacket_send_id=' + this.data.redpacketSendId + '&brand_code=' + this.data.brandCode
 		}
 	},

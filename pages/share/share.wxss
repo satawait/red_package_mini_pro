@@ -5,7 +5,7 @@ page {
 
 .img_area_box {
 	position: relative;
-	padding-top: 104%;
+	padding-top: 100%;
 	height: 0;
 }
 
@@ -13,20 +13,87 @@ page {
 	position: absolute;
 	left: 0;
 	top: 0;
+	top: -150%; 
 	width: 100%;
-	height: 100%;
+	height: 123.4%;
 }
 
-.img_area_hide {
-	height: 119.23%;
-	top: -150%;
+.page_content {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
 }
 
-.img_area_hide.hide {
-    display: none;
+.bg {
+	position: relative;
+	width: 100%;
+	z-index: -1;
+}
+
+.avatar_box {
+	position: absolute;
+	left: 50%;
+	top: 20rpx;
+	transform: translateX(-50%);
+	width: 150rpx;
+	height: 150rpx;
+	border-radius: 50%;
+	box-sizing: border-box;
+	border: 3px solid #d87348;
+	overflow: hidden;
+}
+
+.avatar_box image {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	width: 100%;
+}
+
+.command {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 40%;
+	text-align: center;
+	color: #fbe194;
+	font-size: 52rpx;
+}
+
+.mini_pro_code_box {
+	position: absolute;
+	left: 50%;
+	top: 54%;
+	width: 218rpx;
+	height: 218rpx;
+	box-sizing: border-box;
+	border: 4px solid #bb2b2a;
+	transform: translateX(-50%);
+	border-radius: 50%;
+	overflow: hidden;
+	background: #fff;
+}
+
+.mini_pro_code {
+	position: absolute;
+	width: 94%;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.core {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	width: 40%;
 }
 
 .handle_box {
+	position: relative;
 	background: #fff;
 	border-radius: 10rpx;
 	margin: 0 38rpx;

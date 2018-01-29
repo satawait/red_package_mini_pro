@@ -1,4 +1,9 @@
 <view class="success_list_main">
+	<image
+		class="record_voice_icon"
+		wx:if="{{showVoice}}"
+		src="{{imgUrl}}success_list/record_voice_icon.gif"
+		mode="widthFix"></image>
 	<view class="header_box brand_color_bg">
 		<view class="user_box">
 			<view class="avatar_box">
@@ -8,25 +13,29 @@
 		</view>
 		<view class="command_box">
 			<image src="{{imgUrl}}success_list/voice_icon.png" class="voice_icon" mode="widthFix"></image>
-			测试口令测试口令测试口令测试口令测试口令测试口令
+			{{play_command}}
 		</view>
-		<!-- <view>
+
+		<view wx:if="{{has_received > 0}}">
 			<view class="red_package_value_box">
-				<text class="red_package_value">11.51</text>
+				<text class="red_package_value">{{user_money}}</text>
 				<text class="unit">元</text>
 			</view>
-			<view class="coupon_box">
-				<text class="coupon_tip">获得由歌莉娅额外赠送现金券x1</text>
-				<image src="{{imgUrl}}success_list/link_icon.png" class="link_icon" mode="widthFix"></image>
-			</view>
-		</view> -->
-		 <view class="record_sound_btn">按住说出以上口令领取赏金</view> 
+			<navigator
+				url=""
+				class="coupon_box" wx:if="rewardId != '0'">
+				<text class="coupon_tip">获得由{{brandInfo.brand_name}}额外赠送优惠券x1</text>
+				<image src="{{imgUrl}}success_list/link_icon.png" class="link_icon" mode="widthFix"></image>	
+			</navigator>
+		</view> 
+		<view wx:else class="record_sound_btn" bindtouchstart="beginRecord" bindtouchend="endRecord">按住说出以上口令领取赏金</view>
+
 		<view class="link_box">
 			<navigator url="/pages/index/index" class="link_item">
 				<image src="{{imgUrl}}success_list/redpack_icon.png" class="link_item_icon" mode="widthFix"></image>
 				<text class="link_item_text">发红包</text>
 			</navigator>
-			<navigator url="" class="link_item">
+			<navigator url="{{shareUrl}}" class="link_item">
 				<image src="{{imgUrl}}success_list/share_icon.png" class="link_item_icon" mode="widthFix"></image>
 				<text class="link_item_text">转发好友</text>
 			</navigator>
@@ -38,26 +47,33 @@
 	</view>
 	<view class="friend_list_box">
 		<view class="red_package_info">
-			共2.00元，已领取2/4个
-			<image src="{{imgUrl}}temp_logo.png" class="logo" mode="widthFix" style="width: {{logoWidth}}px"></image>
+			共{{money}}元，已领取{{has_received}}/{{total_count}}个
+			<image src="{{imgUrl}}temp_logo.png" class="logo" mode="widthFix" style="width: {{logoWidth}}px" bindtap="play"></image>
 		</view>
 		<view class="friend_list">
-			<view class="friend_item">
+			<view
+				wx:for="{{received_list}}"
+				wx:key="{{item.user_id}}"
+				class="friend_item">
 				<view class="user_img_box">
-					<image src="{{imgUrl}}temp_img.jpg" mode="widthFix"></image>
+					<image src="{{item.user_portrait}}" mode="widthFix"></image>
 				</view>
 				<view class="friend_info">
-					<view class="friend_name">123123123121231231231231233123123123123</view>
+					<view class="friend_name">{{item.user_nickname}}</view>
 					<audio
-						src="http://ws.stream.qqmusic.qq.com/M500001VfvsJ21xFqb.mp3?guid=ffffffff82def4af4b12b3cd9337d5e7&uin=346897220&vkey=6292F51E1E384E06DCBDC9AB7C49FD713D632D313AC4858BACB8DDD29067D3C601481D36E62053BF8DFEAF74C0A5CCFADD6471160CAF3E6A&fromtag=46"
+						src="{{item.audio_url}}"
 						class="audio"
-						id="audio1"
-						data-id="audio1"
-						bindtap="playAudio">12''</audio>
+						data-index="{{index}}"
+						bindtap="playAudio">
+						<view wx:if="{{index != playingIndex}}">{{item.audio_length}}''</view>
+						<view wx:else>
+							<image src="{{imgUrl}}success_list/play.gif" class="playing_icon" mode="widthFix"></image>
+						</view>
+					</audio>
 				</view>
 				<view class="item_info">
-					<view class="money">11.51元</view>
-					<view class="date">11月2日</view>
+					<view class="money">{{item.money}}元</view>
+					<view class="date">{{item.gain_time}}</view>
 				</view>
 			</view>
 		</view>

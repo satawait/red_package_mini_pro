@@ -154,9 +154,11 @@ App({
                 });
                 // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
                 // 所以此处加入 callback 以防止这种情况（其实就是确保异步返回的用户信息数据可以渲染到页面上）
-                if (this.userInfoReadyCallback) {
-                    this.userInfoReadyCallback(userInfo)
-                }
+                // if (this.userInfoReadyCallback) {
+                //     this.userInfoReadyCallback(userInfo)
+				// 	console.log(this.userInfoReadyCallback);
+				// 	console.log('1111111111111111111111111111');
+                // }
                 // todo end-------------------------------------------------------------------------
 
             },

@@ -2,6 +2,15 @@ page {
 	background: #f8f8f8;
 }
 
+.record_voice_icon {
+	position: fixed;
+	left: 50%;
+	top: 20%;
+	transform: translateX(-50%);
+	width: 200rpx;
+	opacity: .7;
+}
+
 .header_box {
 	text-align: center;
 	color: #fbe194;
@@ -96,6 +105,16 @@ page {
 	padding: 28rpx 0;
 }
 
+.link_item:first-child {
+	text-align: left;
+	padding-left: 30rpx;
+}
+
+.link_item:last-child {
+	text-align: right;
+	padding-right: 30rpx;
+}
+
 .link_item_icon {
 	display: inline-block;
 	vertical-align: middle;
@@ -121,7 +140,7 @@ page {
 
 .logo {
 	position: absolute;
-	right: 30rpx;
+	right: 0;
 	top: 50%;
 	transform: translateY(-50%);
 	width: 0;
@@ -179,6 +198,11 @@ page {
 	border: 1px solid #efefef;
 	border-radius: 10rpx;
 	padding-left: 18rpx;
+}
+
+.playing_icon {
+	width: 52rpx;
+	vertical-align: middle;
 }
 
 .item_info {

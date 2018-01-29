@@ -48,15 +48,21 @@ const config = {
 		 */
 		"CANCEL_REDPACKET_ACTIVITY": "CancelRedpacketActivity",
 		/**
+		 * 获取小程序码
+		 * {path}&{width}&{scene}
+		 */
+		"CREATE_MINI_PRO_CODE": "WxSupport/CreateMiniProCode",
+		/**
 		 * 获取指定红包的领取情况
 		 * {redpackageSendId}&{userId}
 		 */
 		"GET_REDPACKETrECEIVE_LIST": "GetRedpacketReceivedListById",
 		/**
-		 * 获取小程序码
-		 * {path}&{width}&{scene}
+		 * 上传语音接口
+		 * {redpacketSendId}&{userId}?brandId={brandId}
 		 */
-		"CREATE_MINI_PRO_CODE": "WxSupport/CreateMiniProCode"
+		"UPLOAD_VOICE": "Play/PlayAudio"
+		
 	}
 }
 

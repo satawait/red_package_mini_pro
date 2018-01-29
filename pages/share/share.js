@@ -10,9 +10,13 @@ Page({
 		// canvasHeight
 		// miniProCode
 		// commandText
+		imgUrl: app.globalData.imgUrl
 	},
 
 	onLoad: function(options) {
+		this.setData({
+			userInfo: app.globalData.userInfo
+		});
 		const commandText = decodeURI(options.command);
 		const redpacketSendId = decodeURI(options.redpacket_send_id);
 		this.setData({
@@ -52,23 +56,10 @@ Page({
 	},
 
 	onShareAppMessage: function(res) {
-		const that = this;
-		wx.canvasToTempFilePath({
-			canvasId: 'miniProCodeCanvas',
-			success: function(res) {
-				const filePath = res.tempFilePath;
-				console.log(filePath);
-				return {
-					title: '福福福福福福福利',
-					path: `/pages/success_list/success_list?redpacket_send_id=${that.data.redpacketSendId}&brand_code=${that.data.brandCode}`,
-					imageUrl: filePath,
-					success: function(res) {},
-					fail: function(res) {
-						console.log(res);
-					}
-				}
-			}
-		})
+		return {
+			title: '福福福福福福福利',
+			path: '/pages/success_list/success_list?redpacket_send_id=' + this.data.redpacketSendId + '&brand_code=' + this.data.brandCode
+		}
 	},
 
 	drawImage: function(canvasSelect, canvasWidth, canvasHeight, bgUrl, bgHeight, cb) {

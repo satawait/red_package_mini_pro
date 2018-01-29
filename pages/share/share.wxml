@@ -4,6 +4,18 @@
             canvas-id="miniProCodeCanvasHide"
             id="miniProCodeCanvasHide"
             class="img_area_hide"></canvas>
+
+		<view class="page_content">
+			<image src="{{imgUrl}}share/bg.jpg" mode="widthFix" class="bg"></image>
+			<view class="avatar_box">
+				<image src="{{userInfo.avatarUrl}}" mode="widthFix"></image>
+			</view>
+			<view class="command">{{commandText}}</view>
+			<view class="mini_pro_code_box">
+				<image src="{{miniProCode}}" mode="widthFix" class="mini_pro_code"></image>
+				<image src="/images/share/core_icon.png" mode="widthFix" class="core"></image>
+			</view>
+		</view>
 	</view>
 	<view class="handle_box">
 		<button open-type="share" class="handle_btn primary">转发到好友或群聊</button>

@@ -7,7 +7,7 @@
         <view class="input_item_out_box">
             <text class="input_text">设置口令</text>
             <view class="input_item_box">
-                <input placeholder="请输入口令" class="input_item" value="{{playCommand}}"></input>
+                <input placeholder="请输入口令" class="input_item" bindinput="handleCommandInput" value="{{playCommand}}"></input>
                 <view class="tip">小伙伴说对口令就能获得随机的打赏</view>
             </view>
         </view>
@@ -39,7 +39,7 @@
         </view>
     </view>
 	<view class="logo_box">
-		<image src="{{imgUrl}}temp_logo.png" mode="aspectFit" class="logo"></image>
+		<image src="{{brandInfo.brand_sm_light_logo}}" mode="aspectFit" class="logo"></image>
 	</view>
     <tab-bar tab-bar-list="{{tabBarList}}"></tab-bar> 
 </view>

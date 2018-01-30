@@ -87,6 +87,7 @@ App({
             const userInfo = wx.getStorageSync('USER_INFO');
             if (userInfo) {
                 context.globalData.userInfo = userInfo;
+				this.culateLoginLog();
             } else {
                 // 登录
                 wx.login({
@@ -103,6 +104,19 @@ App({
             }
         } catch (e) { }
     },
+
+	culateLoginLog: function() {
+		this.wxRequest({
+			interfaceName: CONFIG.interfaceList.CREATE_USER_VISIT_LOG,
+			reqData: {
+				userId: this.globalData.userInfo.user_id,
+				brandId: this.globalData.brandInfo.id
+			},
+			successCb: (res) => {
+				console.log(res, '----------------统计登陆信息');
+			}
+		})
+	},
 
     getUserInfo: function () {
         console.log('调用了请求用户信息接口');
@@ -140,26 +154,13 @@ App({
 						if (this.userInfoReadyCallback) {
 							this.userInfoReadyCallback(userInfo)
 						}
+						
+						this.culateLoginLog();
 					},
 					extendsOptions: {
 						method: 'POST'
 					}
 				})
-
-                // todo-------------------------以下设置用户信息的代码将来对接到具体接口的成功回调函数中
-                this.globalData.userInfo = userInfo;
-                wx.setStorage({
-                    key: 'USER_INFO',
-                    data: userInfo
-                });
-                // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
-                // 所以此处加入 callback 以防止这种情况（其实就是确保异步返回的用户信息数据可以渲染到页面上）
-                // if (this.userInfoReadyCallback) {
-                //     this.userInfoReadyCallback(userInfo)
-				// 	console.log(this.userInfoReadyCallback);
-				// 	console.log('1111111111111111111111111111');
-                // }
-                // todo end-------------------------------------------------------------------------
 
             },
             fail: res => {

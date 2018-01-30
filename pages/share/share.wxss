@@ -52,11 +52,19 @@ page {
 	width: 100%;
 }
 
-.command {
+.command_box {
 	position: absolute;
 	left: 0;
 	right: 0;
 	top: 40%;
+}
+
+.command {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 50%;
+	transform: translateY(-50%);
 	text-align: center;
 	color: #fbe194;
 	font-size: 52rpx;

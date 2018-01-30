@@ -66,7 +66,22 @@ const config = {
 		 * 上传语音接口
 		 * {redpacketSendId}&{userId}?brandId={brandId}
 		 */
-		"UPLOAD_VOICE": "Play/PlayAudio"
+		"UPLOAD_VOICE": "Play/PlayAudio",
+		/**
+		 * 获取用户余额
+		 * {userId}
+		 */
+		"GET_USER_ASSETS": "User/GetUseAssets",
+		/**
+		 * 申请提现
+		 * {userId}&{money}
+		 */
+		"APPLY_WITH_DRAW_CASH": "User/ApplyWithdrawCash",
+		/**
+		 * 用户登录后写访问日志
+		 * {userId}&{brandId}
+		 */
+		"CREATE_USER_VISIT_LOG": "User/CreateUserVisitLog"
 
 	}
 }

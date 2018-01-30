@@ -15,6 +15,7 @@ Page({
 		// brandInfo
 		// shareUrl
 		// playingIndex
+		// hasDone // 判断赏金是否已经被领完
 		imgUrl: app.globalData.imgUrl,
 
 	},
@@ -24,7 +25,7 @@ Page({
 
 		if (app.globalData.userInfo) {
 			this.setData({
-				redpacketSendId: options.redpacket_send_id || '1071',
+				redpacketSendId: options.redpacket_send_id || '1085',
 				brandInfo: app.globalData.brandInfo,
 				userInfo: app.globalData.userInfo
 			})
@@ -71,7 +72,8 @@ Page({
 					...res.data,
 					money: this.getFloatStr(res.data.money),
 					user_money: this.getFloatStr(res.data.user_money),
-					shareUrl: `/pages/share/share?command=${command}&redpacket_send_id=${redpacketSendId}`
+					shareUrl: `/pages/share/share?command=${command}&redpacket_send_id=${redpacketSendId}`,
+					hasDone: (+res.data.received_count >= +res.data.total_count) ? '0' : '0'
 				});
 			}
 		})

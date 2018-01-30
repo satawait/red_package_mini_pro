@@ -68,7 +68,7 @@ Page({
 		wx.downloadFile({
 			url: this.data.miniProCode,
 			success(down_res) {
-
+				console.log(down_res, '---------------==========');
 				const avatarWidth = Math.floor(0.18 * canvasWidth);
 				const avatarX = Math.floor(canvasWidth / 2); // 绘制圆形头像区域的圆点x
 				const avatarY = Math.floor(canvasHeight * 0.036 + avatarWidth / 2); // 绘制圆形头像区域的圆点y
@@ -88,7 +88,7 @@ Page({
 
 				ctx.drawImage(bgUrl, 0, 0, canvasWidth, bgHeight);
 				commandTextArr.forEach((item, index) => {
-					that.writeText(ctx, item, 24, '#fbe194', (canvasWidth - 24 * item.length) / 2, textY + 34 * index);
+					that.writeText(ctx, item, 24, '#fbe194', canvasWidth / 2, textY + 34 * index);
 				});
 
 				that.drawMiniProCode(ctx, that.data.miniProCode, miniProCodeX, miniProCodeY, miniProCodeWidth / 2, {
@@ -116,8 +116,9 @@ Page({
 	},
 
 	writeText: function(ctx, text, fontSize, color, x, y) {
+		ctx.setTextAlign('center');
 		ctx.setFontSize(fontSize || 26);
-		ctx.setFillStyle(color || '#333');
+		ctx.setFillStyle(color || '#333333');
 		ctx.fillText(text, x, y)
 	},
 

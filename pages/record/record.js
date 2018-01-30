@@ -10,8 +10,8 @@ Page({
 		tabList: [
 			{
 				text: '我发出的',
-				totalCount: '11',
-				totalMoney: '11',
+				totalCount: '',
+				totalMoney: '',
 				recordList: [],
 				hasMore: true,
 				pageIndex: 1

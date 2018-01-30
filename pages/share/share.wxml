@@ -10,7 +10,9 @@
 			<view class="avatar_box">
 				<image src="{{userInfo.avatarUrl}}" mode="widthFix"></image>
 			</view>
-			<view class="command">{{commandText}}</view>
+			<view class="command_box">
+				<view class="command">{{commandText}}</view>
+			</view>
 			<view class="mini_pro_code_box">
 				<image src="{{miniProCode}}" mode="widthFix" class="mini_pro_code"></image>
 				<image src="/images/share/core_icon.png" mode="widthFix" class="core"></image>

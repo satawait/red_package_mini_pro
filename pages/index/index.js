@@ -69,6 +69,13 @@ Page({
 		})
 	},
 
+	handleCommandInput: function(e) {
+		const value = e.detail.value;
+		this.setData({
+			playCommand: value
+		});
+	},
+
 	handleRedPackMoney: function(e) {
 		const value = e.detail.value;
 		if (value < 1 || this.data.redPackCount > 0 && value / this.data.redPackCount < 1) {
@@ -181,9 +188,6 @@ Page({
 								duration: 2000
 							});
 						}, 320);
-						wx.navigateTo({
-							url: `/pages/share/share?command=${encodeURI(that.data.playCommand).toLowerCase()}&redpacket_send_id=${payInfo.redpacket_send_id}`
-						});
 					},
 					extendsOptions: {
 						method: "POST"

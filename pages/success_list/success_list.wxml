@@ -22,14 +22,20 @@
 				<text class="unit">元</text>
 			</view>
 			<navigator
-				url="/pages/coupon/coupon"
+				url="/pages/coupon/coupon?redpacket_send_id={{redpacketSendId}}"
 				class="coupon_box" wx:if="rewardId != '0'">
 				<text class="coupon_tip">获得由{{brandInfo.brand_name}}额外赠送优惠券x1</text>
 				<image src="{{imgUrl}}success_list/link_icon.png" class="link_icon" mode="widthFix"></image>	
 			</navigator>
 		</view>
-		<view wx:elif="{{has_cancel <= 0}}" class="record_sound_btn" bindtouchstart="beginRecord" bindtouchend="endRecord">按住说出以上口令领取赏金</view>
-		<view wx:else class="record_sound_btn disable">口令已经失效了</view>
+		<view
+			wx:elif="{{has_return <= 0 && hasDone !== '1'}}"
+			class="record_sound_btn"
+			bindtouchstart="beginRecord"
+			bindtouchend="endRecord">按住说出以上口令领取赏金</view>
+		<view
+			wx:else
+			class="record_sound_btn disable">{{hasDone === '1' ? '赏金都被领完了' : '口令已经失效了'}}</view>
 
 		<view class="link_box">
 			<navigator url="/pages/index/index" class="link_item">
@@ -40,7 +46,7 @@
 				<image src="{{imgUrl}}success_list/share_icon.png" class="link_item_icon" mode="widthFix"></image>
 				<text class="link_item_text">转发好友</text>
 			</navigator>
-			<navigator url="" class="link_item">
+			<navigator url="/pages/balance/balance" class="link_item">
 				<image src="{{imgUrl}}success_list/cash_icon.png" class="link_item_icon" mode="widthFix"></image>
 				<text class="link_item_text">去提现</text>
 			</navigator>

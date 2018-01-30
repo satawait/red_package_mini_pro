@@ -7,6 +7,6 @@
 	</cover-view>
 	<view class="rule_box">
 		<view class="rele_title">使用须知</view>
-		<view class="rule_text">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</view>
+		<view class="rule_text">{{rewardDesc}}</view>
 	</view>
 </view>

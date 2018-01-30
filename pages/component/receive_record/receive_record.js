@@ -13,7 +13,11 @@ Component({
 		userInfo: app.globalData.userInfo
 	},
 
-	ready: function () { },
+	ready: function () {
+		setTimeout(() => {
+			console.log(this.properties.recordData);
+		}, 1000);
+	},
 
 	methods: {
 

@@ -1,11 +1,14 @@
 {
 	"pages": [
-		"pages/index/index",
+        "pages/index/index",
+        "pages/share/share",
+        "pages/success_list/success_list",
+		
 		"pages/record/record",
-		"pages/success_list/success_list",
+		
 		"pages/balance/balance",
 		"pages/coupon/coupon",
-		"pages/share/share",
+		
 		"pages/component/loading_hover/loading_hover",
 		
 		"pages/component/err_tip/err_tip",

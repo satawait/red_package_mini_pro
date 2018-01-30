@@ -67,6 +67,10 @@ page {
 
 .command {
 	margin-bottom: 22rpx;
+	white-space: nowrap;
+	max-width: 80%;
+	text-overflow: ellipsis;
+	overflow: hidden;
 }
 
 .date {

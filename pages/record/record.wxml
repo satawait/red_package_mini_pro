@@ -20,7 +20,7 @@
 				<scroll-view
 					class="scroll_model"
 					scroll-y
-					bindscrolltolower="loadData">
+					bindscrolltolower="handleLoadData">
 					<send-record record-data="{{tabList[0]}}"></send-record>
 				</scroll-view>
     		</swiper-item>
@@ -28,7 +28,7 @@
 				<scroll-view
 					class="scroll_model"
 					scroll-y
-					bindscrolltolower="loadData">
+					bindscrolltolower="handleLoadData">
 					<receive-record record-data="{{tabList[1]}}"></receive-record>
 				</scroll-view>
     		</swiper-item>

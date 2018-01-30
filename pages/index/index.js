@@ -1,6 +1,8 @@
 const app = getApp()
 const CONFIG = app.globalData.config;
 const imgUrl = app.globalData.imgUrl;
+let timer = ''; // 错误提示计时器
+
 Page({
 	data: {
 		// userInfo
@@ -69,11 +71,33 @@ Page({
 		})
 	},
 
+	isChineseChar: function(str) {
+		var reg = /[\u4E00-\u9FA5\uF900-\uFA2D]/;
+		return reg.test(str);
+	},
+
 	handleCommandInput: function(e) {
+		const cursor = +e.detail.cursor - 1;
 		const value = e.detail.value;
-		this.setData({
-			playCommand: value
-		});
+
+		if (!this.isChineseChar(value[cursor])) {
+			clearTimeout(timer);
+			this.setData({
+				tip: '只能输入中文',
+				showErr: '1',
+				playCommand: this.data.playCommand
+			});
+			timer = setTimeout(() => {
+				this.setData({
+					showErr: '0'
+				});
+			}, 2000);
+		} else {
+			this.setData({
+				showErr: '0',
+				playCommand: value
+			});
+		}
 	},
 
 	handleRedPackMoney: function(e) {

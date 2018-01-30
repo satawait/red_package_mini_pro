@@ -21,11 +21,10 @@ Page({
 	},
 
 	onLoad: function(options) {
-		console.log(options, '------------------success list options');
 
 		if (app.globalData.userInfo) {
 			this.setData({
-				redpacketSendId: options.redpacket_send_id || '1085',
+				redpacketSendId: options.redpacket_send_id || '1099',
 				brandInfo: app.globalData.brandInfo,
 				userInfo: app.globalData.userInfo
 			})
@@ -33,7 +32,7 @@ Page({
 		} else {
 			app.userInfoReadyCallback = data => {
 				this.setData({
-					redpacketSendId: options.redpacket_send_id || '1071',
+					redpacketSendId: options.redpacket_send_id || '1099',
 					// 因为用户信息需要brandId数据返回后才能拿到~此处已经拿到了用户信息~所以品牌信息一定已经拿到了
 					brandInfo: app.globalData.brandInfo,
 					userInfo: data
@@ -94,11 +93,10 @@ Page({
 				that.setData({
 					logoHeight: rect.bottom - rect.top
 				})
-				console.log(`${that.data.imgUrl}temp_logo.png`);
+
 				wx.getImageInfo({
 					src: `${that.data.imgUrl}temp_logo.png`,
 					success: (res) => {
-						console.log(that.data.logoHeight);
 						that.setData({
 							logoWidth: res.width * (that.data.logoHeight / res.height)
 						})

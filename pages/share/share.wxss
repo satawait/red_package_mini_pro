@@ -100,6 +100,14 @@ page {
 	width: 40%;
 }
 
+.brand_logo {
+	position: absolute;
+	left: 50%;
+	top: 84%;
+	transform: translateX(-50%);
+	height: 48rpx;
+}
+
 .handle_box {
 	position: relative;
 	background: #fff;

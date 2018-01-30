@@ -10,6 +10,8 @@ Page({
 		// canvasHeight
 		// miniProCode
 		// commandText
+		// brandLogo
+		brandInfo: app.globalData.brandInfo,
 		imgUrl: app.globalData.imgUrl
 	},
 
@@ -19,7 +21,7 @@ Page({
 		});
 		const commandText = decodeURI(options.command);
 		const redpacketSendId = decodeURI(options.redpacket_send_id);
-		console.log(options, '--------------share options');
+
 		this.setData({
 			commandText: commandText,
 			redpacketSendId: redpacketSendId
@@ -30,29 +32,30 @@ Page({
 		const thumbArg = queryHelper.queryEncoded({
 			'link': app.globalData.userInfo.avatarUrl
 		});
+
+		const brandLogoArg = queryHelper.queryEncoded({
+			'link': app.globalData.brandInfo.brand_big_dark_logo
+		});
+
 		const miniProCode = `${CONFIG.interfaceDomin}${CONFIG.interfaceList.CREATE_MINI_PRO_CODE}/${pathArg}&${widthArg}&${sceneArg}`;
 
 		const thumb = `${CONFIG.interfaceDomin}${CONFIG.interfaceList.PROXY_GET}/${thumbArg}`;
+		const brandLogo = `${CONFIG.interfaceDomin}${CONFIG.interfaceList.PROXY_GET}/${brandLogoArg}`;
 
 		this.setData({
 			miniProCode: miniProCode,
-			thumb: thumb
-		});
-	},
-
-	onShow: function() {
-		this.setData({
+			thumb: thumb,
+			brandLogo: brandLogo,
 			brandCode: app.globalData.brandCode
 		});
-		console.log(this.data.brandCode);
+
 		const that = this;
 		wx.createSelectorQuery().select('#miniProCodeCanvasHide').boundingClientRect(function(rect) {
 			that.setData({
 				canvasWidth: rect.width,
 				canvasHeight: rect.height
 			})
-
-			that.drawImage('miniProCodeCanvasHide', rect.width, rect.height, '/images/share/share_bg.jpg', rect.height);
+			that.initLogo();
 		}).exec();
 	},
 
@@ -63,15 +66,48 @@ Page({
 		}
 	},
 
-	drawImage: function(canvasSelect, canvasWidth, canvasHeight, bgUrl, bgHeight, cb) {
+	initLogo: function(cb) {
+		const that = this;
+		wx.createSelectorQuery().in(this).select('.brand_logo').boundingClientRect(function(rect) {
+			if (rect) {
+				that.setData({
+					brandLogoHeight: rect.bottom - rect.top
+				})
+
+				wx.getImageInfo({
+					src: that.data.brandInfo.brand_big_dark_logo,
+					success: (res) => {
+						that.setData({
+							brandLogoWidth: res.width * (that.data.brandLogoHeight / res.height)
+						})
+
+						that.drawImage('miniProCodeCanvasHide', '/images/share/share_bg.jpg', () => {
+							that.setData({
+								isCanvasReady: true
+							});
+							typeof that.canvasReadyCb === 'function' && that.canvasReadyCb();
+						})
+					}
+				})
+			}
+		}).exec();
+	},
+
+	drawImage: function(canvasSelect, bgUrl, cb) {
 		const that = this;
 		wx.downloadFile({
 			url: this.data.miniProCode,
 			success(down_res) {
-				console.log(down_res, '---------------==========');
+				const canvasWidth = that.data.canvasWidth;
+				const canvasHeight = that.data.canvasHeight;
+				const bgHeight = that.data.canvasHeight;
+
 				const avatarWidth = Math.floor(0.18 * canvasWidth);
 				const avatarX = Math.floor(canvasWidth / 2); // 绘制圆形头像区域的圆点x
 				const avatarY = Math.floor(canvasHeight * 0.036 + avatarWidth / 2); // 绘制圆形头像区域的圆点y
+
+				const brandLogoX = (canvasWidth - that.data.brandLogoWidth) / 2;
+				const brandLogoY = canvasHeight * 0.72;
 
 				const miniProCodeWidth = Math.floor(0.28 * canvasWidth);
 				const miniProCodeX = Math.floor(canvasWidth / 2);
@@ -106,9 +142,16 @@ Page({
 							lineWidth: 3,
 							borderColor: '#d87348'
 						});
-						ctx.draw(false, () => {
-							typeof cb === 'function' && cb();
-						});
+						wx.downloadFile({
+							url: that.data.brandLogo,
+							success(down_res) {
+								const brandLogoFilePath = down_res.tempFilePath;
+								ctx.drawImage(brandLogoFilePath, brandLogoX, brandLogoY, that.data.brandLogoWidth, that.data.brandLogoHeight);
+								ctx.draw(false, () => {
+									typeof cb === 'function' && cb();
+								});
+							}
+						})
 					}
 				})
 			}
@@ -162,16 +205,35 @@ Page({
 	},
 
 	handleShowBigImg: function(e) {
-
-		wx.canvasToTempFilePath({
-			canvasId: 'miniProCodeCanvasHide',
-			success: function(res) {
-				const filePath = res.tempFilePath;
-				wx.previewImage({
-					current: filePath, // 当前显示图片的http链接
-					urls: [filePath] // 需要预览的图片http链接列表
+		if (!this.data.isCanvasReady) {
+			wx.showLoading({
+				title: '图片生成中'
+			});
+			this.canvasReadyCb = () => {
+				wx.hideLoading();
+				wx.canvasToTempFilePath({
+					canvasId: 'miniProCodeCanvasHide',
+					success: function(res) {
+						const filePath = res.tempFilePath;
+						wx.previewImage({
+							current: filePath, // 当前显示图片的http链接
+							urls: [filePath] // 需要预览的图片http链接列表
+						})
+					}
 				})
 			}
-		})
+		} else {
+			wx.canvasToTempFilePath({
+				canvasId: 'miniProCodeCanvasHide',
+				success: function(res) {
+					const filePath = res.tempFilePath;
+					wx.previewImage({
+						current: filePath, // 当前显示图片的http链接
+						urls: [filePath] // 需要预览的图片http链接列表
+					})
+				}
+			})
+		}
+
 	},
 })

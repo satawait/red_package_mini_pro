@@ -19,8 +19,9 @@
 		</view>
 	</view>
 	<view class="record_list">
-		<view
-			class="record_item"
+        <navigator
+            url="/pages/success_list/success_list?redpacket_send_id={{item.redpacket_send_id}}"
+            class="record_item"
 			wx:for="{{recordData.recordList}}"
 			wx:key="{{item.redpacket_send_id}}">
 			<view class="user_box">
@@ -29,11 +30,10 @@
 			<view class="user_info">
 				<view class="user_name">{{item.user_nickname}}</view>
 				<view class="date">{{item.gain_time}}</view>
-				<!-- <view class="date">1月12日 12:03</view> -->
 			</view>
 			<view class="count_info">
 				<view class="sum">{{item.money}}元</view>
 			</view>
-		</view>
+		</navigator>
 	</view>
 </view>

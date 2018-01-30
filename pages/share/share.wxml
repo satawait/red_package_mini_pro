@@ -17,6 +17,7 @@
 				<image src="{{miniProCode}}" mode="widthFix" class="mini_pro_code"></image>
 				<image src="/images/share/core_icon.png" mode="widthFix" class="core"></image>
 			</view>
+			<image src="{{brandInfo.brand_big_dark_logo}}" mode="aspectFit" class="brand_logo" id="logo"></image>
 		</view>
 	</view>
 	<view class="handle_box">

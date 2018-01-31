@@ -132,3 +132,26 @@ page {
 	color: #fff;
 	border: none;
 }
+
+.back_btn {
+	line-height: 100rpx;
+	font-size: 24rpx;
+	color: #7f7f7f;
+}
+
+.back_text {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.right_icon {
+	vertical-align: middle;
+	width: 13rpx;
+	margin-left: 10rpx;
+}
+
+.right_icon.back {
+	transform: rotate(180deg);
+	margin-left: 0;
+	margin-right: 10rpx;
+}

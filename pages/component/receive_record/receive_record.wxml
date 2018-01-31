@@ -1,6 +1,6 @@
 <view class="send_record_main">
 	<view class="header_box">
-		<view class="user_box2">
+		<view class="user_box">
 			<image src="{{userInfo.avatarUrl}}" mode="widthFix"></image>
 		</view>
 		<view class="user_info">
@@ -9,11 +9,11 @@
 		</view>
 		<view class="red_package_info">
 			<view class="info_item">
-				<view class="info_value">{{recordData.totalMoney}}</view>
+				<view class="info_value">{{recordData.totalMoney || 0}}</view>
 				<view>金额</view>
 			</view>
 			<view class="info_item">
-				<view class="info_value">{{recordData.totalCount}}</view>
+				<view class="info_value">{{recordData.totalCount || 0}}</view>
 				<view>数量</view>
 			</view>
 		</view>

@@ -23,5 +23,13 @@
 	<view class="handle_box">
 		<button open-type="share" class="handle_btn primary">转发到好友或群聊</button>
 		<view class="handle_btn" bindtap="handleShowBigImg">生成朋友圈分享图</view>
+		<view class="back_btn" bindtap="handleBack" wx:if="{{fromSuccessList != 1}}">
+			<view class="back_text">我也说一说</view>
+			<image src="{{imgUrl}}share/share_back_icon.png" mode="widthFix" class="right_icon"></image>
+		</view>
+		<view class="back_btn" bindtap="handleBack" wx:else>
+			<image src="{{imgUrl}}share/share_back_icon.png" mode="widthFix" class="right_icon back"></image>
+			<view class="back_text">返回</view>
+		</view>
 	</view>
 </view>

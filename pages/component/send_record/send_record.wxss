@@ -11,8 +11,8 @@ page {
 
 .user_box {
 	position: relative;
-	width: 128rpx;
-	height: 128rpx;
+	width: 130rpx;
+	height: 130rpx;
 	box-sizing: border-box;
 	border: 2px solid #eccea4;
 	border-radius: 50%;

@@ -78,6 +78,10 @@
 						</view>
 					</audio>
 				</view>
+				<view class="best_box" wx:if="{{bestIndex === index}}">
+					<image src="{{imgUrl}}success_list/best_icon.png" class="best_icon" mode="widthFix"></image>
+					<view class="best_text">口气最佳</view>
+				</view>
 				<view class="item_info">
 					<view class="money">{{item.money}}元</view>
 					<view class="date">{{item.gain_time}}</view>

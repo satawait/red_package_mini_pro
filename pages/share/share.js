@@ -22,9 +22,10 @@ Page({
 			// 拆红包的用户从拆红包页面点击转发好友进到此页~会在app.globalData.portraitPath中记录发出红包的用户的头像
 			// 如果没有~则说明是生成口令后进到此分享页面的~当前用户就是发出红包的用户~直接使用用户头像
 			userImg: app.globalData.portraitPath || app.globalData.userInfo.avatarUrl,
-			userInfo: app.globalData.userInfo
+			userInfo: app.globalData.userInfo,
+			fromSuccessList: options.from_success_list
 		});
-		
+
 		const commandText = decodeURI(options.command);
 		const redpacketSendId = decodeURI(options.redpacket_send_id);
 
@@ -242,6 +243,9 @@ Page({
 				}
 			})
 		}
-
 	},
+
+	handleBack: function() {
+		wx.navigateBack();
+	}
 })

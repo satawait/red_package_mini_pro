@@ -7,8 +7,8 @@
 
 .user_box {
 	position: relative;
-	width: 128rpx;
-	height: 128rpx;
+	width: 130rpx;
+	height: 130rpx;
 	box-sizing: border-box;
 	border: 2px solid #eccea4;
 	border-radius: 400px;
@@ -16,32 +16,12 @@
 	margin: 0 auto 8rpx auto;
 }
 
-.user_box2 {
-	position: relative;
-	width: 128rpx;
-	height: 128rpx;
-	box-sizing: border-box;
-	/* border: 2px solid #eccea4; */
-	border-radius: 50%;
-	overflow: hidden;
-	margin: 0 auto 8rpx auto;
-}
-
-.user_box2 image {
+.user_box image {
 	position: absolute;
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%); 
 	width: 100%;
-}
-
-.user_box image {
-	position: absolute;
-	left: 50%;
-	top: 50%;
-	transform: translate(-50%, -50%);
-	width: 100%;
-	border-radius: 50%;
 }
 
 .user_info {
@@ -70,6 +50,8 @@
 .record_list {
 	padding-left: 40rpx;
 	background: #fff;
+	min-height: 100rpx;
+	border-bottom: 1px solid red;
 }
 
 .record_item {
@@ -89,6 +71,10 @@
 	height: 92rpx;
 	overflow: hidden;
 	border: none; 
+}
+
+.record_item .user_box image {
+	border-radius: 50%;
 }
 
 .record_item .user_info {

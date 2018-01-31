@@ -211,6 +211,22 @@ page {
 	vertical-align: middle;
 }
 
+.best_box {
+	float: right;
+	color: #ffac1c;
+	font-size: 22rpx;
+}
+
+.best_icon {
+	vertical-align: middle;
+	width: 25rpx;
+}
+
+.best_text {
+	display: inline-block;
+	vertical-align: middle;
+}
+
 .item_info {
 	position: absolute;
 	right: 26rpx;

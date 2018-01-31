@@ -20,13 +20,13 @@ Page({
 
 	},
 
-	onLoad: function (options) {
+	onLoad: function(options) {
 		this.setData({
 			redpacketSendId: options.redpacket_send_id || '1099',
 		})
 	},
 
-	onShow: function () {
+	onShow: function() {
 		const that = this;
 		if (app.globalData.userInfo) {
 			this.setData({
@@ -46,14 +46,14 @@ Page({
 		}
 	},
 
-	init: function () {
+	init: function() {
 		this.initLogo();
 		this.loadData();
 		this.authInit();
 	},
 
 	// 提前授权录音
-	authInit: function () {
+	authInit: function() {
 		wx.getSetting({
 			success: (res) => {
 				if (!res.authSetting['scope.record']) {
@@ -70,7 +70,7 @@ Page({
 		})
 	},
 
-	loadData: function () {
+	loadData: function() {
 		app.wxRequest({
 			interfaceName: CONFIG.interfaceList.GET_REDPACKETrECEIVE_LIST,
 			reqData: {
@@ -78,15 +78,17 @@ Page({
 				userId: this.data.userInfo.user_id
 			},
 			successCb: (res) => {
-				res.data.received_list = this.handleData(res.data.received_list);
+				const tempData = this.handleData(res.data.received_list, res.data.total_count);
+				res.data.received_list = tempData.list;
 				const redpacketSendId = this.data.redpacketSendId;
 				const command = encodeURI(res.data.play_command).toLowerCase();
 				this.setData({
 					...res.data,
 					money: this.getFloatStr(res.data.money),
 					user_money: this.getFloatStr(res.data.user_money),
-					shareUrl: `/pages/share/share?command=${command}&redpacket_send_id=${redpacketSendId}`,
-					hasDone: (+res.data.received_count >= +res.data.total_count) ? '1' : '0'
+					shareUrl: `/pages/share/share?command=${command}&redpacket_send_id=${redpacketSendId}&from_success_list=1`,
+					hasDone: (+res.data.received_count >= +res.data.total_count) ? '1' : '0',
+					bestIndex: tempData.bestIndex
 				});
 				console.log(this.data.hasDone, (+res.data.received_count >= +res.data.total_count));
 
@@ -96,17 +98,25 @@ Page({
 		})
 	},
 
-	handleData: function (list) {
-		list.forEach((item) => {
+	handleData: function(list, totalCount) {
+		let tempValue = 0;
+		let tempIndex = 0;
+		list.forEach((item, index) => {
 			let tempDate = item.gain_time.slice(item.gain_time.indexOf('-') + 1);
 			item.money = this.getFloatStr(item.money);
 			item.gain_time = tempDate.slice(0, tempDate.lastIndexOf(':'))
+			if (tempValue < item.money) {
+				tempIndex = index;
+			}
 		});
 
-		return list;
+		return {
+			list: list,
+			bestIndex: totalCount <= list.length ? tempIndex : -1
+		}
 	},
 
-	initLogo: function () {
+	initLogo: function() {
 		const that = this;
 
 		const brandLogoArg = queryHelper.queryEncoded({
@@ -114,7 +124,7 @@ Page({
 		});
 		const brandLogo = `${CONFIG.interfaceDomin}${CONFIG.interfaceList.PROXY_GET}/${brandLogoArg}`;
 
-		wx.createSelectorQuery().in(this).select('.logo').boundingClientRect(function (rect) {
+		wx.createSelectorQuery().in(this).select('.logo').boundingClientRect(function(rect) {
 			if (rect) {
 				that.setData({
 					logoHeight: rect.bottom - rect.top
@@ -133,7 +143,7 @@ Page({
 		}).exec();
 	},
 
-	playAudio: function (e) {
+	playAudio: function(e) {
 		const index = e.currentTarget.dataset.index;
 		const audioUrl = this.data.received_list[index].audio_url;
 
@@ -161,7 +171,7 @@ Page({
 
 	},
 
-	beginRecord: function () {
+	beginRecord: function() {
 		startTime = new Date().getTime();
 		this.setData({
 			showVoice: true
@@ -170,7 +180,7 @@ Page({
 		this.start();
 	},
 
-	endRecord: function () {
+	endRecord: function() {
 		const duration = (new Date().getTime() - startTime) / 1000;
 
 		if (duration < 1) {
@@ -187,7 +197,7 @@ Page({
 		this.stop();
 	},
 
-	start: function () {
+	start: function() {
 		const options = {
 			duration: 10000, //指定录音的时长，单位 ms
 			sampleRate: 16000, //采样率
@@ -207,7 +217,7 @@ Page({
 		})
 	},
 
-	stop: function () {
+	stop: function() {
 		recorderManager.stop();
 		recorderManager.onStop((res) => {
 			this.setData({
@@ -219,7 +229,7 @@ Page({
 		})
 	},
 
-	upload: function () {
+	upload: function() {
 		wx.showLoading({
 			title: '识别中...',
 		});
@@ -269,7 +279,7 @@ Page({
 		})
 	},
 
-	play: function () {
+	play: function() {
 		innerAudioContext.autoplay = true
 		innerAudioContext.src = 'http://ws.stream.qqmusic.qq.com/M500001VfvsJ21xFqb.mp3?guid=ffffffff82def4af4b12b3cd9337d5e7&uin=346897220&vkey=6292F51E1E384E06DCBDC9AB7C49FD713D632D313AC4858BACB8DDD29067D3C601481D36E62053BF8DFEAF74C0A5CCFADD6471160CAF3E6A&fromtag=46',
 			innerAudioContext.onPlay(() => {
@@ -282,7 +292,7 @@ Page({
 	},
 
 	// 将数字转换为小数点后两位
-	getFloatStr: function (num) {
+	getFloatStr: function(num) {
 		num += '';
 		num = num.replace(/[^0-9|\.]/g, ''); //清除字符串中的非数字非.字符
 

@@ -1,0 +1,18 @@
+<view class="question_list_main">
+	<view class="question_list">
+		<view
+			wx:for="{{questionList}}"
+			wx:key="{{index}}"
+			class="question_item {{currentIndex === index && isSpread ? 'active' : ''}}">
+			<view class="question" data-index="{{index}}" bindtap="handleClick">
+				<text class="question_text">{{item.question}}</text>
+				<image
+					src="{{imgUrl}}question_list/{{currentIndex === index && isSpread ? 'qa_active_icon.png' : 'qa_icon.png'}}" 
+					class="qa_icon" mode="widthFix"></image>
+			</view>
+			<view class="answer">
+				<text class="answer_text">{{item.answer}}</text>
+			</view>
+		</view>
+	</view>
+</view>

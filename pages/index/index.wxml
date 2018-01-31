@@ -7,7 +7,11 @@
         <view class="input_item_out_box">
             <text class="input_text">设置口令</text>
             <view class="input_item_box">
-                <input placeholder="请输入口令" class="input_item" bindinput="handleCommandInput" value="{{playCommand}}"></input>
+                <input
+					placeholder="{{defaultCommand}}"
+					class="input_item"
+					value="{{playCommand}}"
+					bindinput="handleCommandInput"></input>
                 <view class="tip">小伙伴说对口令就能获得随机的打赏</view>
             </view>
         </view>

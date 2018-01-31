@@ -85,9 +85,15 @@ App({
     handleUserInfo: function (context) {
         try {
             const userInfo = wx.getStorageSync('USER_INFO');
+			console.log(userInfo);
             if (userInfo) {
                 context.globalData.userInfo = userInfo;
-				this.culateLoginLog();
+				
+				if (context.userInfoReadyCallbackT) {
+					console.log(112233);
+					context.userInfoReadyCallbackT(userInfo)
+				}
+				context.culateLoginLog();
             } else {
                 // 登录
                 wx.login({
@@ -112,9 +118,7 @@ App({
 				userId: this.globalData.userInfo.user_id,
 				brandId: this.globalData.brandInfo.id
 			},
-			successCb: (res) => {
-				console.log(res, '----------------统计登陆信息');
-			}
+			successCb: (res) => {}
 		})
 	},
 
@@ -122,7 +126,6 @@ App({
         console.log('调用了请求用户信息接口');
         wx.getUserInfo({
             success: res => {
-				console.log(res);
                 res.userInfo.code = this.appData.code;
                 let userInfo = res.userInfo;
 
@@ -143,14 +146,16 @@ App({
 							...userInfo,
 							...res.data
 						};
-						console.log(this);
+						
 						this.globalData.userInfo = userInfo;
 						wx.setStorage({
 							key: 'USER_INFO',
 							data: userInfo
 						});
+						
 						// 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
 						// 所以此处加入 callback 以防止这种情况（其实就是确保异步返回的用户信息数据可以渲染到页面上）
+						
 						if (this.userInfoReadyCallback) {
 							this.userInfoReadyCallback(userInfo)
 						}

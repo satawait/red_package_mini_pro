@@ -7,9 +7,9 @@
 	<view class="header_box brand_color_bg">
 		<view class="user_box">
 			<view class="avatar_box">
-				<image src="{{userInfo.avatarUrl}}" mode="widthFix"></image>
+				<image src="{{portrait_path}}" mode="widthFix"></image>
 			</view>
-			<view class="user_name">{{userInfo.nickName}}</view>
+			<view class="user_name">{{nickname}}</view>
 		</view>
 		<view class="command_box">
 			<image src="{{imgUrl}}success_list/voice_icon.png" class="voice_icon" mode="widthFix"></image>
@@ -23,7 +23,7 @@
 			</view>
 			<navigator
 				url="/pages/coupon/coupon?redpacket_send_id={{redpacketSendId}}"
-				class="coupon_box" wx:if="rewardId != '0'">
+				class="coupon_box" wx:if="{{user_reward}}">
 				<text class="coupon_tip">获得由{{brandInfo.brand_name}}额外赠送优惠券x1</text>
 				<image src="{{imgUrl}}success_list/link_icon.png" class="link_icon" mode="widthFix"></image>	
 			</navigator>
@@ -55,7 +55,7 @@
 	<view class="friend_list_box">
 		<view class="red_package_info">
 			共{{money}}元，已领取{{received_count}}/{{total_count}}个
-			<image src="{{imgUrl}}temp_logo.png" class="logo" mode="widthFix" style="width: {{logoWidth}}px" bindtap="play"></image>
+			<image src="{{brandInfo.brand_big_light_logo}}" class="logo" mode="widthFix" style="width: {{logoWidth}}px; height: {{logoHeight}}px;" bindtap="play"></image>
 		</view>
 		<view class="friend_list">
 			<view

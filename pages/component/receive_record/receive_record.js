@@ -10,17 +10,17 @@ Component({
 	},
 
 	data: {
-		userInfo: app.globalData.userInfo
+		// userInfo
 	},
 
 	ready: function () {
-		setTimeout(() => {
-			console.log(this.properties.recordData);
-		}, 1000);
+		if (app.globalData.userInfo) {
+			this.setData({
+				userInfo: app.globalData.userInfo
+			})
+		}
 	},
 
-	methods: {
-
-	}
+	methods: {}
 
 })

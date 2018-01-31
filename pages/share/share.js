@@ -11,18 +11,25 @@ Page({
 		// miniProCode
 		// commandText
 		// brandLogo
-		brandInfo: app.globalData.brandInfo,
+		// userImg
+		// brandInfo
 		imgUrl: app.globalData.imgUrl
 	},
 
 	onLoad: function(options) {
+
 		this.setData({
+			// 拆红包的用户从拆红包页面点击转发好友进到此页~会在app.globalData.portraitPath中记录发出红包的用户的头像
+			// 如果没有~则说明是生成口令后进到此分享页面的~当前用户就是发出红包的用户~直接使用用户头像
+			userImg: app.globalData.portraitPath || app.globalData.userInfo.avatarUrl,
 			userInfo: app.globalData.userInfo
 		});
+		
 		const commandText = decodeURI(options.command);
 		const redpacketSendId = decodeURI(options.redpacket_send_id);
 
 		this.setData({
+			brandInfo: app.globalData.brandInfo,
 			commandText: commandText,
 			redpacketSendId: redpacketSendId
 		});
@@ -30,7 +37,7 @@ Page({
 		const widthArg = Base64.encode('300');
 		const sceneArg = Base64.encode('temp.jpg');
 		const thumbArg = queryHelper.queryEncoded({
-			'link': app.globalData.userInfo.avatarUrl
+			'link': this.data.userImg
 		});
 
 		const brandLogoArg = queryHelper.queryEncoded({
@@ -38,7 +45,7 @@ Page({
 		});
 
 		const miniProCode = `${CONFIG.interfaceDomin}${CONFIG.interfaceList.CREATE_MINI_PRO_CODE}/${pathArg}&${widthArg}&${sceneArg}`;
-
+		console.log(miniProCode);
 		const thumb = `${CONFIG.interfaceDomin}${CONFIG.interfaceList.PROXY_GET}/${thumbArg}`;
 		const brandLogo = `${CONFIG.interfaceDomin}${CONFIG.interfaceList.PROXY_GET}/${brandLogoArg}`;
 
@@ -62,7 +69,8 @@ Page({
 	onShareAppMessage: function(res) {
 		return {
 			title: '福福福福利利利利',
-			path: '/pages/success_list/success_list?redpacket_send_id=' + this.data.redpacketSendId + '&brand_code=' + this.data.brandCode
+			path: '/pages/success_list/success_list?redpacket_send_id=' + this.data.redpacketSendId + '&brand_code=inno'
+			// path: '/pages/success_list/success_list?redpacket_send_id=' + this.data.redpacketSendId + '&brand_code=' + this.data.brandCode
 		}
 	},
 
@@ -127,7 +135,7 @@ Page({
 					that.writeText(ctx, item, 24, '#fbe194', canvasWidth / 2, textY + 34 * index);
 				});
 
-				that.drawMiniProCode(ctx, that.data.miniProCode, miniProCodeX, miniProCodeY, miniProCodeWidth / 2, {
+				that.drawMiniProCode(ctx, miniProCodeFilePath, miniProCodeX, miniProCodeY, miniProCodeWidth / 2, {
 					lineWidth: 6,
 					borderColor: '#bb2b2a'
 				});

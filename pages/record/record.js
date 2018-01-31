@@ -24,13 +24,16 @@ Page({
 		}]
 	},
 
-	onLoad: function(options) {
+	onShow: function() {
+		if (!app.globalData.userInfo) {
+			wx.navigateTo({
+				url: '/pages/index/index'
+			})
+			return;
+		}
 		this.setData({
 			userId: app.globalData.userInfo.user_id
 		});
-	},
-
-	onShow: function() {
 		this.loadData(this.data.interFaceNameList[this.data.tabIndex]);
 	},
 
@@ -69,8 +72,6 @@ Page({
 					tabList: tabList,
 				});
 
-				console.log(res);
-
 			}
 		})
 	},
@@ -78,9 +79,7 @@ Page({
 	handleData: function(list) {
 
 		list.forEach((item) => {
-
-			item.money = this.getFloatStr(item.money)
-			console.log(item);
+			item.money = this.getFloatStr(item.money);
 		});
 		return list
 	},

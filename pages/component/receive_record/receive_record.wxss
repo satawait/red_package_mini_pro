@@ -16,6 +16,25 @@
 	margin: 0 auto 8rpx auto;
 }
 
+.user_box2 {
+	position: relative;
+	width: 128rpx;
+	height: 128rpx;
+	box-sizing: border-box;
+	/* border: 2px solid #eccea4; */
+	border-radius: 50%;
+	overflow: hidden;
+	margin: 0 auto 8rpx auto;
+}
+
+.user_box2 image {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%); 
+	width: 100%;
+}
+
 .user_box image {
 	position: absolute;
 	left: 50%;
@@ -56,10 +75,7 @@
 .record_item {
 	position: relative;
 	padding: 40rpx 30rpx 40rpx 0;
-}
-
-.record_item + .record_item {
-	border-top: 1px solid #f1f1f1;
+	border-bottom: 1px solid #f1f1f1;
 }
 
 .record_item .user_info,
@@ -72,7 +88,7 @@
 	width: 92rpx;
 	height: 92rpx;
 	overflow: hidden;
-	border: none;
+	border: none; 
 }
 
 .record_item .user_info {
@@ -84,7 +100,7 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
-	margin-bottom: 22rpx;
+	margin-bottom: 14rpx;
 }
 
 .date {
@@ -94,9 +110,9 @@
 
 .count_info {
 	float: right;
+	margin-top: 4rpx;
 }
 
 .sum {
 	font-weight: bolder;
-	margin-bottom: 22rpx;
 }

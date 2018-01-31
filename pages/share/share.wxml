@@ -8,7 +8,7 @@
 		<view class="page_content">
 			<image src="{{imgUrl}}share/bg.jpg" mode="widthFix" class="bg"></image>
 			<view class="avatar_box">
-				<image src="{{userInfo.avatarUrl}}" mode="widthFix"></image>
+				<image src="{{userImg}}" mode="widthFix"></image>
 			</view>
 			<view class="command_box">
 				<view class="command">{{commandText}}</view>

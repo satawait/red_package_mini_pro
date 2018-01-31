@@ -59,14 +59,11 @@ page {
 .record_item {
 	position: relative;
 	padding: 40rpx 0;
-}
-
-.record_item + .record_item {
-	border-top: 1px solid #f1f1f1;
+	border-bottom: 1px solid #f1f1f1;
 }
 
 .command {
-	margin-bottom: 22rpx;
+	margin-bottom: 14rpx;
 	white-space: nowrap;
 	max-width: 80%;
 	text-overflow: ellipsis;
@@ -88,5 +85,5 @@ page {
 
 .sum {
 	font-weight: bolder;
-	margin-bottom: 22rpx;
+	margin-bottom: 14rpx;
 }

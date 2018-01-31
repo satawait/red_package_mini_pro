@@ -1,7 +1,10 @@
 {
 	"pages": [
-        "pages/index/index",
-        "pages/share/share",
+		"pages/index/index",
+		"pages/share/share",
+		"pages/question_list/question_list",
+        
+        
         "pages/success_list/success_list",
 		
 		"pages/record/record",

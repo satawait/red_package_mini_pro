@@ -13,13 +13,17 @@ Component({
 	},
 
 	data: {
-		userInfo: app.globalData.userInfo
+		// userInfo
 	},
 
-	ready: function () { },
+	ready: function () {
+		if (app.globalData.userInfo) {
+			this.setData({
+				userInfo: app.globalData.userInfo
+			})
+		}
+	},
 
-	methods: {
-
-	}
+	methods: {}
 
 })

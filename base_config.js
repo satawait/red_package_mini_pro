@@ -2,7 +2,7 @@ const config = {
 	"interfaceDomin": "https://miniptapi.innourl.com/Redpacket/", // 测试环境接口域名
 	// "imgUrl": "http://10.1.1.5:8092/images/red_package_min_pro/", // 测试环境图片地址
 	"imgUrl": "http://inno.mo2o.com.cn:8092/images/red_package_min_pro/", // 测试环境图片地址
-	"pageSize": 3,
+	"pageSize": 20,
 	"reqMethod": "GET",
 	"header": {
 		'content-type': 'application/json'
@@ -12,7 +12,7 @@ const config = {
 		 * 根据brand_code获取品牌信息
 		 * {brandCode}
 		 */
-		"GET_BRAND_INFO": "GetBrandInfo",
+		"GET_BRAND_INFO": "Brand/GetBrandInfo",
 		/**
 		 * 登陆注册
 		 * {brandId}
@@ -27,12 +27,17 @@ const config = {
 		 * 根据用户获取发送的红包列表
 		 * {userId}&{pageIndex}&{pageSize}
 		 */
-		"GET_SEND_RED_PACKAGE": "GetSendRedpacketListByUserId",
+		"GET_SEND_RED_PACKAGE": "Redpacket/GetSendRedpacketListByUserId",
 		/**
 		 * 根据用户获取收到的红包列表
 		 * {userId}&{pageIndex}&{pageSize}
 		 */
-		"GET_RECEIVED_RED_PACKAGE": "GetReceivedRedpacketListByUserId",
+		"GET_RECEIVED_RED_PACKAGE": "Redpacket/GetReceivedRedpacketListByUserId",
+		/**
+		 * 获取指定红包的领取情况
+		 * {redpackageSendId}&{userId}
+		 */
+		"GET_REDPACKETrECEIVE_LIST": "Redpacket/GetRedpacketReceivedListById",
 		/**
 		 * 获取用户创建红包所需的信息
 		 * {userId}&{brandId}
@@ -41,27 +46,22 @@ const config = {
 		/**
 		 * 生成一个红包
 		 */
-		"CREATE_REDPACKET": "CreateRedpacketActivity",
+		"CREATE_REDPACKET": "Redpacket/CreateRedpacketActivity",
 		/**
 		 * 取消红包
 		 * {redpacketSendId}
 		 */
-		"CANCEL_REDPACKET_ACTIVITY": "CancelRedpacketActivity",
+		"CANCEL_REDPACKET_ACTIVITY": "Redpacket/CancelRedpacketActivity",
 		/**
 		 * 获取发送红包的支付状态
 		 * {redpacketSendId}
 		 */
-		"GET_REDPACKET_ACTIVITY_STATUS": "GetRedpacketActivityStatus",
+		"GET_REDPACKET_ACTIVITY_STATUS": "Redpacket/GetRedpacketActivityStatus",
 		/**
 		 * 获取小程序码
 		 * {path}&{width}&{scene}
 		 */
 		"CREATE_MINI_PRO_CODE": "WxSupport/CreateMiniProCode",
-		/**
-		 * 获取指定红包的领取情况
-		 * {redpackageSendId}&{userId}
-		 */
-		"GET_REDPACKETrECEIVE_LIST": "GetRedpacketReceivedListById",
 		/**
 		 * 上传语音接口
 		 * {redpacketSendId}&{userId}?brandId={brandId}

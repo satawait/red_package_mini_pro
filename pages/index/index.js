@@ -23,23 +23,24 @@ Page({
 			text: '余额提现'
 		}, {
 			iconUrl: `${imgUrl}tab_bar/problem_icon.png`,
-			path: '/pages/record/record',
+			path: '/pages/question_list/question_list',
 			text: '常见问题'
 		}],
 
 	},
 
-	onLoad: function() {
-		console.log(app.globalData);
+	onShow: function() {
 		if (app.globalData.userInfo) {
 			this.setData({
 				brandInfo: app.globalData.brandInfo,
-				userInfo: app.globalData.userInfo
+				userInfo: app.globalData.userInfo,
+				redPackMoney: '',
+				redPackCount: ''
 			})
 
 			this.loadData();
 		} else {
-			app.userInfoReadyCallback = data => {
+			app.userInfoReadyCallback = (data) => {
 				this.setData({
 					// 因为用户信息需要brandId数据返回后才能拿到~此处已经拿到了用户信息~所以品牌信息一定已经拿到了
 					brandInfo: app.globalData.brandInfo,
@@ -62,7 +63,8 @@ Page({
 			successCb: (res) => {
 				const data = res.data;
 				this.setData({
-					playCommand: data.play_command,
+					defaultCommand: data.play_command,
+					playCommand: '',
 					serviceChargeRate: data.service_charge_rate,
 					money: this.getFloatStr(data.money),
 				})
@@ -72,6 +74,9 @@ Page({
 	},
 
 	isChineseChar: function(str) {
+		if (!str) {
+			return true;
+		}
 		var reg = /[\u4E00-\u9FA5\uF900-\uFA2D]/;
 		return reg.test(str);
 	},
@@ -79,7 +84,7 @@ Page({
 	handleCommandInput: function(e) {
 		const cursor = +e.detail.cursor - 1;
 		const value = e.detail.value;
-
+		console.log(value.length, value);
 		if (!this.isChineseChar(value[cursor])) {
 			clearTimeout(timer);
 			this.setData({
@@ -92,6 +97,12 @@ Page({
 					showErr: '0'
 				});
 			}, 2000);
+		} else if (value.length > 20) {
+			this.setData({
+				tip: '只能输入20个字',
+				showErr: '1',
+				playCommand: this.data.playCommand
+			});
 		} else {
 			this.setData({
 				showErr: '0',
@@ -163,16 +174,16 @@ Page({
 			interfaceName: CONFIG.interfaceList.CREATE_REDPACKET,
 			bodyData: {
 				userId: this.data.userInfo.user_id,
-				content: this.data.playCommand,
+				content: this.data.playCommand || this.data.defaultCommand,
 				count: this.data.redPackCount,
 				money: this.data.redPackMoney,
 				brandId: this.data.brandInfo.id
 			},
 			successCb: (res) => {
+				const command = this.data.playCommand || this.data.defaultCommand;
 				if (res.data.need_pay <= 0) {
-					console.log(`/pages/share/share?command=${encodeURI(this.data.playCommand).toLowerCase()}&redpacket_send_id=${res.data.redpacket_send_id}`)
 					wx.navigateTo({
-						url: `/pages/share/share?command=${encodeURI(this.data.playCommand).toLowerCase()}&redpacket_send_id=${res.data.redpacket_send_id}`
+						url: `/pages/share/share?command=${encodeURI(command).toLowerCase()}&redpacket_send_id=${res.data.redpacket_send_id}`
 					});
 				} else {
 					this.toPay(res.data);

@@ -223,7 +223,7 @@ Page({
 			'signType': payInfo.sign_type,
 			'success': function(res) {
 				setTimeout(() => {
-					this.getPayStatus();
+					that.getPayStatus();
 				}, 1000);
 			},
 			'fail': function(res) {
@@ -252,10 +252,11 @@ Page({
 
 	// 递归~每隔3秒调用一次接口获取支付状态~当支付状态为真时~才表示已经真正支付完毕~页面跳转到分享页面
 	getPayStatus: function() {
+		console.log('调用了递归接口');
 		app.wxRequest({
 			interfaceName: CONFIG.interfaceList.GET_REDPACKET_ACTIVITY_STATUS,
 			reqData: {
-				userId: that.data.userInfo.user_id
+				userId: this.data.userInfo.user_id
 			},
 			successCb: (res) => {
 				if (res.data) {
@@ -276,9 +277,9 @@ Page({
 							this.getPayStatus();
 						}, 3000);
 					}
-					
+
 				}
-				console.log(res);
+				console.log(res, '-----递归接口返回值');
 			}
 		})
 	},

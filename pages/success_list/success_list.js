@@ -22,8 +22,10 @@ Page({
 	},
 
 	onLoad: function(options) {
+		console.log('success_list onload');
+		console.log(app.globalData.redpacketSendId);
 		this.setData({
-			redpacketSendId: options.redpacket_send_id || '1099',
+			redpacketSendId: options.redpacket_send_id || app.globalData.redpacketSendId || '1099',
 		})
 	},
 

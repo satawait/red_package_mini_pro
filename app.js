@@ -1,5 +1,6 @@
 const CONFIG = require('./base_config.js').config;
 const queryHelper = require('./utils/request_helper/request_helper.js');
+const Base64 = require('./utils/encode_helper/base64.js');
 
 App({
 
@@ -15,68 +16,82 @@ App({
         config: CONFIG,
     },
 
-    onLaunch: function (options) {
-		// console.log(options, '------------初始化链接参数')
-		// this.handleBrandCode(options, this.handleUserInfo);
+    onLaunch: function(options) {
+        // console.log(options, '------------初始化链接参数')
+        // this.handleBrandCode(options, this.handleUserInfo);
         // this.handleCookieId();
     },
 
-	onShow: function (options) {
-		this.globalData.userInfo = null;
-		console.log(options, '-------11-----初始化链接参数')
-		this.handleBrandCode(options, this.handleUserInfo);
-		this.handleCookieId();
-	},
+    onShow: function(options) {
+        this.globalData.userInfo = null;
+        console.log(options, '-------11-----初始化链接参数')
+        this.handleBrandCode(options, this.handleUserInfo);
+        this.handleCookieId();
+    },
 
-	handleBrandCode: function (options, cb) {
-		console.log(this.globalData.brandInfo);
-		// 缓存和进入页面的路径都没有brandCode时默认用test方便开发测试~实际上线时一定会带上参数
-		this.globalData.brandCode = options.query.brand_code || wx.getStorageSync('BRAND_CODE') || ' ';
-		console.log(this.globalData.brandCode, '-----------handleBrandCode中拿到的brandCode-------', options.query.brand_code);
-		try {
-			const storageBrandCode = wx.getStorageSync('BRAND_CODE');
-			console.log(storageBrandCode, '---------------缓存中的brandCode');
-			if (storageBrandCode && this.globalData.brandCode === storageBrandCode) {
-				this.globalData.brandInfo = wx.getStorageSync('BRAND_INFO');
-				console.log('缓存中存在brandCode并且和链接中拿到的brandCode一样');
-				cb(this);
-			} else {
-				this.getBrandInfo(cb);
-			}
-		} catch (e) {}
-	},
+    handleBrandCode: function(options, cb) {
+        console.log(this.globalData.brandInfo);
+        // 缓存和进入页面的路径都没有brandCode时默认用test方便开发测试~实际上线时一定会带上参数
+        // 如果是通过分享卡片进来~参数通过options.query以json格式传入~
+        // 如果检测到没有~则可能是通过扫小程序码进来~参数通过options.scene以字符转格式传入
+        // 格式为id=1245&bc=inno~对应redpacket_send_id和brand_code
+        // redpacket_send_id在success_list页面onload函数中使用
+        console.log(options.query.scene);
+        console.log(Base64.decode(options.query.scene));
+        const redpacketSendIdFromScene = options.query.scene && Base64.decode(options.query.scene).split('&')[0].split('=')[1];
+        const brandFromScene = options.query.scene && Base64.decode(options.query.scene).split('&')[1].split('=')[1];
+        console.log(redpacketSendIdFromScene, '----------', brandFromScene);
+        this.globalData.brandCode = options.query.brand_code || brandFromScene || wx.getStorageSync('BRAND_CODE') || ' ';
+        console.log(this.globalData.brandCode, options.query.brand_code, brandFromScene, '---解析出来的初始化参数');
+        if (redpacketSendIdFromScene) {
+            // 如果存在~说明此次是通过扫描小程序码进来的~直接打开的success_list页面~
+            // 此时onLoad中的options参数拿不到redpacketSendId~故从此处赋值给一globalData属相以便赋值
+            this.globalData.redpacketSendId = redpacketSendIdFromScene;
+        }
+        try {
+            const storageBrandCode = wx.getStorageSync('BRAND_CODE');
+            console.log(storageBrandCode, '---------------缓存中的brandCode');
+            if (storageBrandCode && this.globalData.brandCode === storageBrandCode) {
+                this.globalData.brandInfo = wx.getStorageSync('BRAND_INFO');
+                console.log('缓存中存在brandCode并且和链接中拿到的brandCode一样');
+                cb(this);
+            } else {
+                this.getBrandInfo(cb);
+            }
+        } catch (e) {}
+    },
 
-	getBrandInfo: function (cb) {
-		const that = this;
-		this.wxRequest({
-			interfaceName: CONFIG.interfaceList.GET_BRAND_INFO,
-			reqData: {
-				brandCode: this.globalData.brandCode
-			},
-			successCb: (res) => {
-				if (this.brandInfoReadyCallback) {
-					this.brandInfoReadyCallback(res);
-				}
-				console.log(res.data, '-----------------通过接口拿到的brandInfo');
-				this.globalData.brandInfo = res.data; 
-				this.globalData.brandCode = res.data.brand_code;
-				wx.setStorage({
-					key: 'BRAND_CODE',
-					data: this.globalData.brandCode
-				});
+    getBrandInfo: function(cb) {
+        const that = this;
+        this.wxRequest({
+            interfaceName: CONFIG.interfaceList.GET_BRAND_INFO,
+            reqData: {
+                brandCode: this.globalData.brandCode
+            },
+            successCb: (res) => {
+                if (this.brandInfoReadyCallback) {
+                    this.brandInfoReadyCallback(res);
+                }
+                console.log(res.data, '-----------------通过接口拿到的brandInfo');
+                this.globalData.brandInfo = res.data;
+                this.globalData.brandCode = res.data.brand_code;
+                wx.setStorage({
+                    key: 'BRAND_CODE',
+                    data: this.globalData.brandCode
+                });
 
-				wx.setStorage({
-					key: 'BRAND_INFO',
-					data: this.globalData.brandInfo,
-					success: function() {
-						cb(that);
-					}
-				})
-			}
-		})
-	},
+                wx.setStorage({
+                    key: 'BRAND_INFO',
+                    data: this.globalData.brandInfo,
+                    success: function() {
+                        cb(that);
+                    }
+                })
+            }
+        })
+    },
 
-    handleCookieId: function () {
+    handleCookieId: function() {
         try {
             let systemInfoArr = wx.getSystemInfoSync().system.split(' ');
             this.appData.sysType = systemInfoArr[0].toUpperCase();
@@ -89,22 +104,22 @@ App({
             this.appData.cookieId = cookieId;
             this.globalData.cookieId = cookieId;
 
-        } catch (e) { }
+        } catch (e) {}
     },
 
-	// 获取用户信息处理函数~因为接口中需要用到brandId参数~所以需要被放在brandInfo数据接口的成功的回调中执行
-    handleUserInfo: function (context) {
+    // 获取用户信息处理函数~因为接口中需要用到brandId参数~所以需要被放在brandInfo数据接口的成功的回调中执行
+    handleUserInfo: function(context) {
         try {
             const userInfo = wx.getStorageSync('USER_INFO');
-			console.log(userInfo);
+            console.log(userInfo);
             if (userInfo) {
                 context.globalData.userInfo = userInfo;
-				
-				if (context.userInfoReadyCallback) {
-					console.log(112233);
-					context.userInfoReadyCallback(userInfo)
-				}
-				context.culateLoginLog();
+
+                if (context.userInfoReadyCallback) {
+                    console.log(112233);
+                    context.userInfoReadyCallback(userInfo)
+                }
+                context.culateLoginLog();
             } else {
                 // 登录
                 wx.login({
@@ -119,64 +134,64 @@ App({
                     }
                 })
             }
-        } catch (e) { }
+        } catch (e) {}
     },
 
-	culateLoginLog: function() {
-		this.wxRequest({
-			interfaceName: CONFIG.interfaceList.CREATE_USER_VISIT_LOG,
-			reqData: {
-				userId: this.globalData.userInfo.user_id,
-				brandId: this.globalData.brandInfo.id
-			},
-			successCb: (res) => {}
-		})
-	},
+    culateLoginLog: function() {
+        this.wxRequest({
+            interfaceName: CONFIG.interfaceList.CREATE_USER_VISIT_LOG,
+            reqData: {
+                userId: this.globalData.userInfo.user_id,
+                brandId: this.globalData.brandInfo.id
+            },
+            successCb: (res) => {}
+        })
+    },
 
-    getUserInfo: function () {
+    getUserInfo: function() {
         console.log('调用了请求用户信息接口');
         wx.getUserInfo({
             success: res => {
                 res.userInfo.code = this.appData.code;
                 let userInfo = res.userInfo;
 
-				const bodyData = {
-					encryptedData: res.encryptedData,
-					iv: res.iv,
-					code: this.appData.code
-				};
+                const bodyData = {
+                    encryptedData: res.encryptedData,
+                    iv: res.iv,
+                    code: this.appData.code
+                };
 
-				this.wxRequest({
-					interfaceName: CONFIG.interfaceList.LOGIN,
-					reqData: {
-						brandId: this.globalData.brandInfo.id
-					},
-					bodyData: bodyData,
-					successCb: (res) => {
-						userInfo = {
-							...userInfo,
-							...res.data
-						};
-						
-						this.globalData.userInfo = userInfo;
-						wx.setStorage({
-							key: 'USER_INFO',
-							data: userInfo
-						});
-						
-						// 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
-						// 所以此处加入 callback 以防止这种情况（其实就是确保异步返回的用户信息数据可以渲染到页面上）
-						
-						if (this.userInfoReadyCallback) {
-							this.userInfoReadyCallback(userInfo)
-						}
-						
-						this.culateLoginLog();
-					},
-					extendsOptions: {
-						method: 'POST'
-					}
-				})
+                this.wxRequest({
+                    interfaceName: CONFIG.interfaceList.LOGIN,
+                    reqData: {
+                        brandId: this.globalData.brandInfo.id
+                    },
+                    bodyData: bodyData,
+                    successCb: (res) => {
+                        userInfo = {
+                            ...userInfo,
+                            ...res.data
+                        };
+
+                        this.globalData.userInfo = userInfo;
+                        wx.setStorage({
+                            key: 'USER_INFO',
+                            data: userInfo
+                        });
+
+                        // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
+                        // 所以此处加入 callback 以防止这种情况（其实就是确保异步返回的用户信息数据可以渲染到页面上）
+
+                        if (this.userInfoReadyCallback) {
+                            this.userInfoReadyCallback(userInfo)
+                        }
+
+                        this.culateLoginLog();
+                    },
+                    extendsOptions: {
+                        method: 'POST'
+                    }
+                })
 
             },
             fail: res => {
@@ -193,8 +208,8 @@ App({
     },
 
     // 数据请求函数
-    wxRequest: function ({
-		interfaceName,
+    wxRequest: function({
+        interfaceName,
         reqData,
         bodyData,
         successCb,
@@ -208,7 +223,7 @@ App({
         },
         isShowLoad = 1,
         extendsOptions = {}
-	}) {
+    }) {
 
         if (isShowLoad === 1) {
             wx.showLoading({
@@ -236,7 +251,7 @@ App({
                 sys_version: this.appData.sysVersion,
                 cookie_id: this.appData.cookieId
             },
-            success: function (res) {
+            success: function(res) {
                 wx.hideLoading();
                 if (res.data.code === '1') {
                     typeof successCb == "function" && successCb(res.data);
@@ -245,7 +260,7 @@ App({
                 }
 
             },
-            fail: function (res) {
+            fail: function(res) {
                 wx.hideLoading();
                 failCb(res.data);
             }

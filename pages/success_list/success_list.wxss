@@ -23,9 +23,9 @@ page {
 
 .avatar_box {
 	position: relative;
-	width: 160rpx;
-	height: 160rpx;
-	border: 2px solid #d87348;
+	width: 150rpx;
+	height: 150rpx;
+	border: 4px solid #d87348;
 	border-radius: 50%;
 	overflow: hidden;
 	margin: 0 auto 20rpx auto;

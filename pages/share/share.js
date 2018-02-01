@@ -24,10 +24,9 @@ Page({
 	},
 
 	onLoad: function(options) {
-		console.log(Base64.decode(options.brand_dark_logo));
+		// 拆红包的用户从拆红包页面点击转发好友进到此页~会在app.globalData.portraitPath中记录发出红包的用户的头像
+		// 如果没有~则说明是生成口令后进到此分享页面的~当前用户就是发出红包的用户~直接使用用户头像
 		this.setData({
-			// 拆红包的用户从拆红包页面点击转发好友进到此页~会在app.globalData.portraitPath中记录发出红包的用户的头像
-			// 如果没有~则说明是生成口令后进到此分享页面的~当前用户就是发出红包的用户~直接使用用户头像
 			userImg: app.globalData.portraitPath || app.globalData.userInfo.avatarUrl,
 			userInfo: app.globalData.userInfo,
 			fromSuccessList: options.from_success_list,
@@ -44,14 +43,11 @@ Page({
 			commandText: commandText,
 			redpacketSendId: redpacketSendId
 		});
-		const scene = {
-			rs_id: this.data.redpacketSendId,
-			bc: this.data.brandCode
-		};
-		console.log(scene);
+		const sceneStr = `id=${this.data.redpacketSendId}&bc=${this.data.brandCode}`;
+		console.log(sceneStr);
 		const pathArg = Base64.encode(`pages/success_list/success_list`);
 		const widthArg = Base64.encode('300');
-		const sceneArg = Base64.encode('temp.jpg');
+		const sceneArg = Base64.encode(sceneStr);
 		const thumbArg = queryHelper.queryEncoded({
 			'link': this.data.userImg
 		});
@@ -60,7 +56,7 @@ Page({
 			'link': this.data.brandLogo
 			// 'link': app.globalData.brandInfo.brand_big_dark_logo
 		});
-
+		console.log(sceneArg);
 		const miniProCode = `${CONFIG.interfaceDomin}${CONFIG.interfaceList.CREATE_MINI_PRO_CODE}/${pathArg}&${widthArg}&${sceneArg}`;
 		console.log(miniProCode);
 		const thumb = `${CONFIG.interfaceDomin}${CONFIG.interfaceList.PROXY_GET}/${thumbArg}`;
@@ -100,7 +96,6 @@ Page({
 				that.setData({
 					brandLogoHeight: rect.bottom - rect.top
 				})
-				
 				wx.getImageInfo({
 					// src: that.data.brandInfo.brand_big_dark_logo,
 					src: that.data.brandLogo,
@@ -168,7 +163,7 @@ Page({
 							url: that.data.brandLogo,
 							success(down_res) {
 								const brandLogoFilePath = down_res.tempFilePath;
-								
+
 								ctx.drawImage(brandLogoFilePath, brandLogoX, brandLogoY, that.data.brandLogoWidth, that.data.brandLogoHeight);
 								that.drawCircle(ctx, thumbFilePath, avatarX, avatarY, avatarWidth / 2, {
 									lineWidth: 3,

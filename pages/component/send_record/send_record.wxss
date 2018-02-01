@@ -80,7 +80,7 @@ page {
 	right: 30rpx;
 	top: 50%;
 	transform: translateY(-50%);
-	text-align: center;
+	text-align: right;
 }
 
 .sum {

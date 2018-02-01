@@ -55,7 +55,8 @@
 	<view class="friend_list_box">
 		<view class="red_package_info">
 			共{{money}}元，已领取{{received_count}}/{{total_count}}个
-			<image src="{{brandInfo.brand_big_light_logo}}" class="logo" mode="widthFix" style="width: {{logoWidth}}px; height: {{logoHeight}}px;" bindtap="play"></image>
+			<text wx:if="{{has_return == 1}}">已退回{{return_money}}元</text>
+			<image src="{{brand_light_logo}}" class="logo" mode="widthFix" style="width: {{logoWidth}}px; height: {{logoHeight}}px;" bindtap="play"></image>
 		</view>
 		<view class="friend_list">
 			<view

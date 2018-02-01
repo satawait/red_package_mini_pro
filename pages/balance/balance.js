@@ -66,6 +66,8 @@ Page({
 				tip: '提现金额不能为空'
 			});
 			return;
+		} else if (this.data.showErr === '1') {
+			return;
 		}
 		app.wxRequest({
 			interfaceName: CONFIG.interfaceList.APPLY_WITH_DRAW_CASH,

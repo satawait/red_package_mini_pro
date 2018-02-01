@@ -3,6 +3,7 @@ const CONFIG = app.globalData.config;
 const recorderManager = wx.getRecorderManager();
 const innerAudioContext = wx.createInnerAudioContext();
 const queryHelper = require('../../utils/request_helper/request_helper.js');
+const Base64 = require('../../utils/encode_helper/base64.js');
 let startTime = 0;
 
 Page({
@@ -33,21 +34,29 @@ Page({
 				brandInfo: app.globalData.brandInfo,
 				userInfo: app.globalData.userInfo
 			})
+			console.log('直接拿');
+			console.log(this.data.brandInfo, '----------------设置到data里的btandInfo');
+			console.log(app.globalData.brandInfo, '-----------brand_info');
+			console.log(app.globalData.brandCode, '-----------brand_info');
 			this.init();
 		} else {
-			app.userInfoReadyCallbackT = (data) => {
+			app.userInfoReadyCallback = (data) => {
 				this.setData({
 					// 因为用户信息需要brandId数据返回后才能拿到~此处已经拿到了用户信息~所以品牌信息一定已经拿到了
 					brandInfo: app.globalData.brandInfo,
 					userInfo: data
 				});
+				console.log('间接拿');
+				console.log(this.data.brandInfo, '----------------设置到data里的btandInfo');
+				console.log(app.globalData.brandInfo, '-----------brand_info');
+				console.log(app.globalData.brandCode, '-----------brand_info');
 				that.init();
 			}
 		}
 	},
 
 	init: function() {
-		this.initLogo();
+		// this.initLogo();
 		this.loadData();
 		this.authInit();
 	},
@@ -78,15 +87,17 @@ Page({
 				userId: this.data.userInfo.user_id
 			},
 			successCb: (res) => {
+				console.log(res.data.brand_dark_logo);
 				const tempData = this.handleData(res.data.received_list, res.data.total_count);
 				res.data.received_list = tempData.list;
 				const redpacketSendId = this.data.redpacketSendId;
 				const command = encodeURI(res.data.play_command).toLowerCase();
+				res.data.return_money = this.getFloatStr(res.data.return_money);
 				this.setData({
 					...res.data,
 					money: this.getFloatStr(res.data.money),
 					user_money: this.getFloatStr(res.data.user_money),
-					shareUrl: `/pages/share/share?command=${command}&redpacket_send_id=${redpacketSendId}&from_success_list=1`,
+					shareUrl: `/pages/share/share?brand_code=${res.data.brand_code}&command=${command}&redpacket_send_id=${redpacketSendId}&from_success_list=1&brand_dark_logo=${Base64.encode(res.data.brand_dark_logo)}`,
 					hasDone: (+res.data.received_count >= +res.data.total_count) ? '1' : '0',
 					bestIndex: tempData.bestIndex
 				});
@@ -94,6 +105,7 @@ Page({
 
 				app.globalData.portraitPath = this.data.portrait_path;
 				console.log(app.globalData.portraitPath);
+				this.initLogo();
 			}
 		})
 	},
@@ -112,7 +124,7 @@ Page({
 
 		return {
 			list: list,
-			bestIndex: totalCount <= list.length ? tempIndex : -1
+			bestIndex: totalCount <= list.length && list.length > 1 ? tempIndex : -1
 		}
 	},
 
@@ -120,14 +132,15 @@ Page({
 		const that = this;
 
 		const brandLogoArg = queryHelper.queryEncoded({
-			'link': app.globalData.brandInfo.brand_big_light_logo
+			'link': this.data.brand_logo
+			// 'link': app.globalData.brandInfo.brand_big_light_logo
 		});
 		const brandLogo = `${CONFIG.interfaceDomin}${CONFIG.interfaceList.PROXY_GET}/${brandLogoArg}`;
 
 		wx.createSelectorQuery().in(this).select('.logo').boundingClientRect(function(rect) {
 			if (rect) {
 				that.setData({
-					logoHeight: rect.bottom - rect.top
+					logoHeight: 48
 				})
 
 				wx.getImageInfo({
@@ -176,7 +189,6 @@ Page({
 		this.setData({
 			showVoice: true
 		});
-		recorderManager.stop();
 		this.start();
 	},
 

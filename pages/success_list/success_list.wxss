@@ -5,7 +5,7 @@ page {
 .record_voice_icon {
 	position: fixed;
 	left: 50%;
-	top: 20%;
+	top: 40%;
 	transform: translateX(-50%);
 	width: 200rpx;
 	opacity: .7;
@@ -23,8 +23,8 @@ page {
 
 .avatar_box {
 	position: relative;
-	width: 168rpx;
-	height: 168rpx;
+	width: 160rpx;
+	height: 160rpx;
 	border: 2px solid #d87348;
 	border-radius: 50%;
 	overflow: hidden;
@@ -219,7 +219,8 @@ page {
 
 .best_icon {
 	vertical-align: middle;
-	width: 25rpx;
+	width: 20rpx;
+	margin-right: 4rpx;
 }
 
 .best_text {

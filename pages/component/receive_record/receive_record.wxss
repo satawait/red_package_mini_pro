@@ -51,7 +51,6 @@
 	padding-left: 40rpx;
 	background: #fff;
 	min-height: 100rpx;
-	border-bottom: 1px solid red;
 }
 
 .record_item {

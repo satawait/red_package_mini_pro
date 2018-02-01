@@ -4,7 +4,7 @@ page {
 }
 
 .blank_bg {
-	position: fixed;
+	position: absolute;
 	width: 720rpx;
 	top: 44rpx;
 	bottom: 0;

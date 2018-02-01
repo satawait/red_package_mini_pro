@@ -13,17 +13,27 @@ Page({
 		// brandLogo
 		// userImg
 		// brandInfo
-		imgUrl: app.globalData.imgUrl
+		imgUrl: app.globalData.imgUrl,
+		shareTitle: [
+			'红红红红包包包包',
+			'说对这个口令有赏金',
+			'新年快乐！快来领赏金',
+			'先动口再动手',
+			'这个口令红包太好玩啦'
+		]
 	},
 
 	onLoad: function(options) {
-
+		console.log(Base64.decode(options.brand_dark_logo));
 		this.setData({
 			// 拆红包的用户从拆红包页面点击转发好友进到此页~会在app.globalData.portraitPath中记录发出红包的用户的头像
 			// 如果没有~则说明是生成口令后进到此分享页面的~当前用户就是发出红包的用户~直接使用用户头像
 			userImg: app.globalData.portraitPath || app.globalData.userInfo.avatarUrl,
 			userInfo: app.globalData.userInfo,
-			fromSuccessList: options.from_success_list
+			fromSuccessList: options.from_success_list,
+			randomIndex: Math.floor(Math.random() * this.data.shareTitle.length),
+			brandCode: options.from_success_list ? options.brand_code : app.globalData.brandCode,
+			brandLogo: options.from_success_list ? Base64.decode(options.brand_dark_logo) : app.globalData.brandInfo.brand_big_dark_logo
 		});
 
 		const commandText = decodeURI(options.command);
@@ -34,6 +44,11 @@ Page({
 			commandText: commandText,
 			redpacketSendId: redpacketSendId
 		});
+		const scene = {
+			rs_id: this.data.redpacketSendId,
+			bc: this.data.brandCode
+		};
+		console.log(scene);
 		const pathArg = Base64.encode(`pages/success_list/success_list`);
 		const widthArg = Base64.encode('300');
 		const sceneArg = Base64.encode('temp.jpg');
@@ -42,19 +57,20 @@ Page({
 		});
 
 		const brandLogoArg = queryHelper.queryEncoded({
-			'link': app.globalData.brandInfo.brand_big_dark_logo
+			'link': this.data.brandLogo
+			// 'link': app.globalData.brandInfo.brand_big_dark_logo
 		});
 
 		const miniProCode = `${CONFIG.interfaceDomin}${CONFIG.interfaceList.CREATE_MINI_PRO_CODE}/${pathArg}&${widthArg}&${sceneArg}`;
 		console.log(miniProCode);
 		const thumb = `${CONFIG.interfaceDomin}${CONFIG.interfaceList.PROXY_GET}/${thumbArg}`;
 		const brandLogo = `${CONFIG.interfaceDomin}${CONFIG.interfaceList.PROXY_GET}/${brandLogoArg}`;
-
+		console.log(brandLogo);
 		this.setData({
 			miniProCode: miniProCode,
 			thumb: thumb,
 			brandLogo: brandLogo,
-			brandCode: app.globalData.brandCode
+			// brandCode: app.globalData.brandCode
 		});
 
 		const that = this;
@@ -68,10 +84,12 @@ Page({
 	},
 
 	onShareAppMessage: function(res) {
+		console.log(app.globalData, '--------share');
+		console.log('/pages/success_list/success_list?redpacket_send_id=' + this.data.redpacketSendId + '&brand_code=' + this.data.brandCode, '------分享链接');
 		return {
-			title: '福福福福利利利利',
-			path: '/pages/success_list/success_list?redpacket_send_id=' + this.data.redpacketSendId + '&brand_code=inno'
-			// path: '/pages/success_list/success_list?redpacket_send_id=' + this.data.redpacketSendId + '&brand_code=' + this.data.brandCode
+			title: this.data.shareTitle[this.data.randomIndex],
+			// path: '/pages/success_list/success_list?redpacket_send_id=' + this.data.redpacketSendId + '&brand_code=inno'
+			path: '/pages/success_list/success_list?redpacket_send_id=' + this.data.redpacketSendId + '&brand_code=' + this.data.brandCode
 		}
 	},
 
@@ -82,9 +100,10 @@ Page({
 				that.setData({
 					brandLogoHeight: rect.bottom - rect.top
 				})
-
+				
 				wx.getImageInfo({
-					src: that.data.brandInfo.brand_big_dark_logo,
+					// src: that.data.brandInfo.brand_big_dark_logo,
+					src: that.data.brandLogo,
 					success: (res) => {
 						that.setData({
 							brandLogoWidth: res.width * (that.data.brandLogoHeight / res.height)
@@ -141,21 +160,26 @@ Page({
 					borderColor: '#bb2b2a'
 				});
 
-				that.drawCircle(ctx, '/images/share/core_icon.png', miniProCodeX, miniProCodeY, coreWidth / 2);
-
 				wx.downloadFile({
 					url: that.data.thumb,
 					success(down_res) {
 						const thumbFilePath = down_res.tempFilePath;
-						that.drawCircle(ctx, thumbFilePath, avatarX, avatarY, avatarWidth / 2, {
-							lineWidth: 3,
-							borderColor: '#d87348'
-						});
 						wx.downloadFile({
 							url: that.data.brandLogo,
 							success(down_res) {
 								const brandLogoFilePath = down_res.tempFilePath;
+								
 								ctx.drawImage(brandLogoFilePath, brandLogoX, brandLogoY, that.data.brandLogoWidth, that.data.brandLogoHeight);
+								that.drawCircle(ctx, thumbFilePath, avatarX, avatarY, avatarWidth / 2, {
+									lineWidth: 3,
+									borderColor: '#d87348'
+								});
+
+								that.drawCircle(ctx, '/images/share/core_icon.png', miniProCodeX, miniProCodeY, coreWidth / 2, {
+									lineWidth: 0,
+									borderColor: '#bb2b2a'
+								});
+
 								ctx.draw(false, () => {
 									typeof cb === 'function' && cb();
 								});

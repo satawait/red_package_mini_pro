@@ -16,19 +16,29 @@ App({
     },
 
     onLaunch: function (options) {
-
-		this.handleBrandCode(options, this.handleUserInfo);
-        this.handleCookieId();
-
+		// console.log(options, '------------初始化链接参数')
+		// this.handleBrandCode(options, this.handleUserInfo);
+        // this.handleCookieId();
     },
 
+	onShow: function (options) {
+		this.globalData.userInfo = null;
+		console.log(options, '-------11-----初始化链接参数')
+		this.handleBrandCode(options, this.handleUserInfo);
+		this.handleCookieId();
+	},
+
 	handleBrandCode: function (options, cb) {
+		console.log(this.globalData.brandInfo);
 		// 缓存和进入页面的路径都没有brandCode时默认用test方便开发测试~实际上线时一定会带上参数
-		this.globalData.brandCode = options.query.brand_code || wx.getStorageSync('BRAND_CODE') || 'test';
+		this.globalData.brandCode = options.query.brand_code || wx.getStorageSync('BRAND_CODE') || ' ';
+		console.log(this.globalData.brandCode, '-----------handleBrandCode中拿到的brandCode-------', options.query.brand_code);
 		try {
 			const storageBrandCode = wx.getStorageSync('BRAND_CODE');
+			console.log(storageBrandCode, '---------------缓存中的brandCode');
 			if (storageBrandCode && this.globalData.brandCode === storageBrandCode) {
 				this.globalData.brandInfo = wx.getStorageSync('BRAND_INFO');
+				console.log('缓存中存在brandCode并且和链接中拿到的brandCode一样');
 				cb(this);
 			} else {
 				this.getBrandInfo(cb);
@@ -47,8 +57,9 @@ App({
 				if (this.brandInfoReadyCallback) {
 					this.brandInfoReadyCallback(res);
 				}
-				this.globalData.brandInfo = res.data;
-
+				console.log(res.data, '-----------------通过接口拿到的brandInfo');
+				this.globalData.brandInfo = res.data; 
+				this.globalData.brandCode = res.data.brand_code;
 				wx.setStorage({
 					key: 'BRAND_CODE',
 					data: this.globalData.brandCode
@@ -89,9 +100,9 @@ App({
             if (userInfo) {
                 context.globalData.userInfo = userInfo;
 				
-				if (context.userInfoReadyCallbackT) {
+				if (context.userInfoReadyCallback) {
 					console.log(112233);
-					context.userInfoReadyCallbackT(userInfo)
+					context.userInfoReadyCallback(userInfo)
 				}
 				context.culateLoginLog();
             } else {

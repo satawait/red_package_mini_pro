@@ -2,6 +2,8 @@ const app = getApp()
 const CONFIG = app.globalData.config;
 const imgUrl = app.globalData.imgUrl;
 let timer = ''; // 错误提示计时器
+let getPayStatusCount = 0;
+const MAX_GET_PAY_STATUS = 10; // 最多尝试10次
 
 Page({
 	data: {
@@ -121,6 +123,12 @@ Page({
 				tip: '每个红包金额不能低于1元',
 				showErr: '1'
 			});
+		} else if (value > 50000) {
+			this.setData({
+				redPackMoney: this.data.redPackMoney,
+				tip: '赏金不能超过50000',
+				showErr: '1'
+			});
 		} else {
 			this.setData({
 				redPackMoney: value,
@@ -129,9 +137,9 @@ Page({
 			});
 		}
 
-		if ((1 + this.data.serviceChargeRate) * value - this.data.money > 0) {
+		if ((1 + this.data.serviceChargeRate) * this.data.redPackMoney - this.data.money > 0) {
 			this.setData({
-				btnText: `还需支付${this.getFloatStr((1 + this.data.serviceChargeRate) * value - this.data.money)}元`
+				btnText: `还需支付${this.getFloatStr((1 + this.data.serviceChargeRate) * this.data.redPackMoney - this.data.money)}元`
 			})
 		} else {
 			this.setData({
@@ -146,6 +154,12 @@ Page({
 			this.setData({
 				redPackCount: value,
 				tip: '每个红包金额不能低于1元',
+				showErr: '1'
+			});
+		} else if (value > 10000) {
+			this.setData({
+				redPackCount: this.data.redPackCount,
+				tip: '红包数量不能超过10000',
 				showErr: '1'
 			});
 		} else {
@@ -168,6 +182,8 @@ Page({
 				tip: '红包数不能为空',
 				showErr: '1'
 			});
+			return;
+		} else if (this.data.showErr === '1') {
 			return;
 		}
 		app.wxRequest({
@@ -206,7 +222,9 @@ Page({
 			'paySign': payInfo.pay_sign,
 			'signType': payInfo.sign_type,
 			'success': function(res) {
-				this.getPayStatus();
+				setTimeout(() => {
+					this.getPayStatus();
+				}, 1000);
 			},
 			'fail': function(res) {
 
@@ -232,7 +250,7 @@ Page({
 		})
 	},
 
-	// 递归~每隔10秒调用一次接口获取支付状态~当支付状态为真时~才表示已经真正支付完毕~页面跳转到分享页面
+	// 递归~每隔3秒调用一次接口获取支付状态~当支付状态为真时~才表示已经真正支付完毕~页面跳转到分享页面
 	getPayStatus: function() {
 		app.wxRequest({
 			interfaceName: CONFIG.interfaceList.GET_REDPACKET_ACTIVITY_STATUS,
@@ -245,9 +263,20 @@ Page({
 						url: `/pages/share/share?command=${encodeURI(that.data.playCommand).toLowerCase()}&redpacket_send_id=${payInfo.redpacket_send_id}`
 					});
 				} else {
-					setTimeout(() => {
-						this.getPayStatus();
-					}, 10000);
+					getPayStatusCount = getPayStatusCount + 1;
+					if (getPayStatusCount > MAX_GET_PAY_STATUS) {
+						wx.showToast({
+							title: '生成口令失败',
+							image: '/images/common/err_tip_icon.png',
+							duration: 2000
+						})
+						return;
+					} else {
+						setTimeout(() => {
+							this.getPayStatus();
+						}, 3000);
+					}
+					
 				}
 				console.log(res);
 			}

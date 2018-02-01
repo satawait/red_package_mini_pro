@@ -17,18 +17,21 @@
 				<image src="{{miniProCode}}" mode="widthFix" class="mini_pro_code"></image>
 				<image src="/images/share/core_icon.png" mode="widthFix" class="core"></image>
 			</view>
-			<image src="{{brandInfo.brand_big_dark_logo}}" mode="aspectFit" class="brand_logo" id="logo"></image>
+			<image src="{{brandLogo}}" mode="aspectFit" class="brand_logo" id="logo"></image>
+			<!-- <image src="{{brandInfo.brand_big_dark_logo}}" mode="aspectFit" class="brand_logo" id="logo"></image> -->
 		</view>
 	</view>
 	<view class="handle_box">
 		<button open-type="share" class="handle_btn primary">转发到好友或群聊</button>
 		<view class="handle_btn" bindtap="handleShowBigImg">生成朋友圈分享图</view>
-		<view class="back_btn" bindtap="handleBack" wx:if="{{fromSuccessList != 1}}">
+		<navigator
+			url="/pages/success_list/success_list?redpacket_send_id={{redpacketSendId}}"
+			 class="back_btn" wx:if="{{fromSuccessList != 1}}">
 			<view class="back_text">我也说一说</view>
-			<image src="{{imgUrl}}share/share_back_icon.png" mode="widthFix" class="right_icon"></image>
-		</view>
+			<image src="{{imgUrl}}share/share_back_icon.png" mode="widthFix" class="right_icon go"></image>
+		</navigator>
 		<view class="back_btn" bindtap="handleBack" wx:else>
-			<image src="{{imgUrl}}share/share_back_icon.png" mode="widthFix" class="right_icon back"></image>
+			<image src="{{imgUrl}}share/share_back_icon.png" mode="widthFix" class="right_icon"></image>
 			<view class="back_text">返回</view>
 		</view>
 	</view>

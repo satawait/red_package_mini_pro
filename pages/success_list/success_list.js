@@ -25,7 +25,7 @@ Page({
 		console.log('success_list onload');
 		console.log(app.globalData.redpacketSendId);
 		this.setData({
-			redpacketSendId: options.redpacket_send_id || app.globalData.redpacketSendId || '1099',
+			redpacketSendId: options.redpacket_send_id || app.globalData.redpacketSendId || '1307',
 		})
 	},
 
@@ -162,14 +162,36 @@ Page({
 		const index = e.currentTarget.dataset.index;
 		const audioUrl = this.data.received_list[index].audio_url;
 
-		innerAudioContext.src = audioUrl;
-		innerAudioContext.play();
+		const isPaused = innerAudioContext.paused;
+		const orianglAudioUrl = innerAudioContext.src;
+		
+		// innerAudioContext.src = audioUrl;
+		// innerAudioContext.play();
+
+		console.log(isPaused);
+		if (orianglAudioUrl == audioUrl && isPaused) {
+			console.log(123);
+			innerAudioContext.play();
+		} else if (orianglAudioUrl == audioUrl && !isPaused) {
+			console.log(456);
+			innerAudioContext.stop();
+		} else if (orianglAudioUrl != audioUrl) {
+			console.log(789);
+			innerAudioContext.src = audioUrl;
+			innerAudioContext.play();
+		}
 
 		innerAudioContext.onPlay(() => {
 			this.setData({
 				playingIndex: index
 			});
 			console.log('开始播放')
+		})
+
+		innerAudioContext.onStop(() => {
+			this.setData({
+				playingIndex: -1
+			});
 		})
 
 		innerAudioContext.onEnded(() => {

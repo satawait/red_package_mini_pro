@@ -29,7 +29,7 @@ Page({
 		this.setData({
 			userImg: app.globalData.portraitPath || app.globalData.userInfo.avatarUrl,
 			userInfo: app.globalData.userInfo,
-			fromSuccessList: options.from_success_list,
+			fromSuccessList: options.from_success_list || -1,
 			randomIndex: Math.floor(Math.random() * this.data.shareTitle.length),
 			brandCode: options.from_success_list ? options.brand_code : app.globalData.brandCode,
 			brandLogo: options.from_success_list ? Base64.decode(options.brand_dark_logo) : app.globalData.brandInfo.brand_big_dark_logo

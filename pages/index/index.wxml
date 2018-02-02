@@ -9,6 +9,7 @@
             <view class="input_item_box">
                 <input
 					placeholder="{{defaultCommand}}"
+					placeholder-style="color: #b2b2b2"
 					class="input_item"
 					value="{{playCommand}}"
 					bindinput="handleCommandInput"></input>
@@ -21,6 +22,7 @@
                 <input
 					type="digit"
 					placeholder="0.00"
+					placeholder-style="color: #b2b2b2"
 					class="input_item"
 					value="{{redPackMoney}}"
 					bindinput="handleRedPackMoney"></input>
@@ -32,6 +34,7 @@
                 <input
 					type="number"
 					placeholder="0"
+					placeholder-style="color: #b2b2b2"
 					class="input_item"
 					value="{{redPackCount}}"
 					bindinput="handleRedPackCount"></input>

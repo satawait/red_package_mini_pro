@@ -3,7 +3,7 @@ const CONFIG = app.globalData.config;
 const imgUrl = app.globalData.imgUrl;
 let timer = ''; // 错误提示计时器
 let getPayStatusCount = 0;
-const MAX_GET_PAY_STATUS = 10; // 最多尝试10次
+const MAX_GET_PAY_STATUS = 10; // 最多尝试10次 
 
 Page({
 	data: {
@@ -115,8 +115,9 @@ Page({
 
 	handleRedPackMoney: function(e) {
 		const value = e.detail.value;
+		
 		if (value < 1 || this.data.redPackCount > 0 && value / this.data.redPackCount < 1) {
-			console.log(value)
+			console.log(this.testMoneyInput(value))
 			this.setData({
 				redPackMoney: value,
 				servicePrice: this.getFloatStr(this.data.serviceChargeRate * value),
@@ -131,15 +132,17 @@ Page({
 			});
 		} else {
 			this.setData({
-				redPackMoney: value,
-				servicePrice: this.getFloatStr(this.data.serviceChargeRate * value),
+				redPackMoney: this.testMoneyInput(value),
+				servicePrice: this.getFloatStr((1000 * this.data.serviceChargeRate) * (1000 * value) / 1000000),
+				// servicePrice: this.getFloatStr(((100 * this.data.serviceChargeRate) * (value * 100)) / 10000),
 				showErr: '0'
 			});
 		}
-
-		if ((1 + this.data.serviceChargeRate) * this.data.redPackMoney - this.data.money > 0) {
+		
+		
+		if (((1 + this.data.serviceChargeRate) * (this.data.redPackMoney * 1000) - (this.data.money * 1000)) / 1000 > 0) {
 			this.setData({
-				btnText: `还需支付${this.getFloatStr((1 + this.data.serviceChargeRate) * this.data.redPackMoney - this.data.money)}元`
+				btnText: `还需支付${this.getFloatStr(((1 + this.data.serviceChargeRate) * (this.data.redPackMoney * 1000) - (this.data.money * 1000)) / 1000)}元`
 			})
 		} else {
 			this.setData({
@@ -223,7 +226,7 @@ Page({
 			'signType': payInfo.sign_type,
 			'success': function(res) {
 				setTimeout(() => {
-					that.getPayStatus();
+					that.getPayStatus(payInfo.redpacket_send_id);
 				}, 1000);
 			},
 			'fail': function(res) {
@@ -251,17 +254,17 @@ Page({
 	},
 
 	// 递归~每隔3秒调用一次接口获取支付状态~当支付状态为真时~才表示已经真正支付完毕~页面跳转到分享页面
-	getPayStatus: function() {
+	getPayStatus: function (redpacketSendId) {
 		console.log('调用了递归接口');
 		app.wxRequest({
 			interfaceName: CONFIG.interfaceList.GET_REDPACKET_ACTIVITY_STATUS,
 			reqData: {
-				userId: this.data.userInfo.user_id
+				redpacketSendId: redpacketSendId
 			},
 			successCb: (res) => {
 				if (res.data) {
 					wx.navigateTo({
-						url: `/pages/share/share?command=${encodeURI(that.data.playCommand).toLowerCase()}&redpacket_send_id=${payInfo.redpacket_send_id}`
+						url: `/pages/share/share?command=${encodeURI(this.data.playCommand).toLowerCase()}&redpacket_send_id=${redpacketSendId}`
 					});
 				} else {
 					getPayStatusCount = getPayStatusCount + 1;
@@ -274,7 +277,7 @@ Page({
 						return;
 					} else {
 						setTimeout(() => {
-							this.getPayStatus();
+							this.getPayStatus(redpacketSendId);
 						}, 3000);
 					}
 
@@ -305,4 +308,15 @@ Page({
 		num = num.match(/\d+\.\d{2}/)[0];
 		return num;
 	},
+
+	// 限制用户输入小数点后很多位
+	testMoneyInput: function(value) {
+		const int = value.split('.')[0];
+		const dig = value.split('.')[1];
+		if (dig && dig.length > 2) {
+			return int + '.' + dig.slice(0, 2)
+		} else {
+			return value
+		}
+	}
 })

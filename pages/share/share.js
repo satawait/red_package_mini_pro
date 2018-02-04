@@ -170,10 +170,10 @@ Page({
 									borderColor: '#d87348'
 								});
 
-								that.drawCircle(ctx, '/images/share/core_icon.png', miniProCodeX, miniProCodeY, coreWidth / 2, {
-									lineWidth: 0,
-									borderColor: '#bb2b2a'
-								});
+								// that.drawCircle(ctx, '/images/share/core_icon.png', miniProCodeX, miniProCodeY, coreWidth / 2, {
+								// 	lineWidth: 0,
+								// 	borderColor: '#bb2b2a'
+								// });
 
 								ctx.draw(false, () => {
 									typeof cb === 'function' && cb();

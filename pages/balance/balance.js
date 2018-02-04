@@ -2,15 +2,15 @@ const app = getApp();
 const CONFIG = app.globalData.config;
 
 Page({
-	
+
 	data: {
 		// userId
 		// balance
 		// balanceValue
 	},
-	
-	onLoad: function (options) {
-		if(!app.globalData.userInfo) {
+
+	onLoad: function(options) {
+		if (!app.globalData.userInfo) {
 			wx.navigateTo({
 				url: '/pages/index/index'
 			})
@@ -23,8 +23,8 @@ Page({
 			this.loadData();
 		}
 	},
-	
-	onShow: function () {
+
+	onShow: function() {
 
 	},
 
@@ -69,36 +69,39 @@ Page({
 		} else if (this.data.showErr === '1') {
 			return;
 		}
-		app.wxRequest({
-			interfaceName: CONFIG.interfaceList.APPLY_WITH_DRAW_CASH,
-			reqData: {
-				userId: this.data.userId,
-				money: this.data.balanceValue
-			},
-			successCb: (res) => {
-				const that = this;
-				wx.showModal({
-					title: '提示',
-					content: '提现成功，预计1-5个工作日内到账',
-					showCancel: false,
-					success: function (res) {
-						if (res.confirm) {
-							that.setData({
-								balanceValue: ''
-							});
-							that.loadData();
-						}
-					}
-				})
-			},
-			extendsOptions: {
-				method: "POST"
-			}
-		})
+		
+        setTimeout(() => {
+            app.wxRequest({
+                interfaceName: CONFIG.interfaceList.APPLY_WITH_DRAW_CASH,
+                reqData: {
+                    userId: this.data.userId,
+                    money: this.data.balanceValue
+                },
+                successCb: (res) => {
+                    const that = this;
+                    wx.showModal({
+                        title: '提示',
+                        content: '提现成功，预计1-7个工作日内到账',
+                        showCancel: false,
+                        success: function (res) {
+                            if (res.confirm) {
+                                that.setData({
+                                    balanceValue: ''
+                                });
+                                that.loadData();
+                            }
+                        }
+                    })
+                },
+                extendsOptions: {
+                    method: "POST"
+                }
+            })
+        }, 500)
 	},
 
 	// 将数字转换为小数点后两位
-	getFloatStr: function (num) {
+	getFloatStr: function(num) {
 		num += '';
 		num = num.replace(/[^0-9|\.]/g, ''); //清除字符串中的非数字非.字符
 

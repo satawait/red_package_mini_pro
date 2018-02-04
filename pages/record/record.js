@@ -61,7 +61,6 @@ Page({
 					this.setData({
 						tabList: tabList,
 					});
-					return;
 				}
 				tabList[tabIndex].totalCount = data.total_send_count >= 0 ? data.total_send_count : data.total_received_count;
 				tabList[tabIndex].totalMoney = data.total_send_money >= 0 ? data.total_send_money : data.total_received_money;
@@ -71,6 +70,8 @@ Page({
 				this.setData({
 					tabList: tabList,
 				});
+
+				return;
 
 			}
 		})

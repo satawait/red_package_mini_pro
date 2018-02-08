@@ -3,7 +3,8 @@ const CONFIG = app.globalData.config;
 const imgUrl = app.globalData.imgUrl;
 let timer = ''; // 错误提示计时器
 let getPayStatusCount = 0;
-const MAX_GET_PAY_STATUS = 10; // 最多尝试10次 
+const MAX_GET_PAY_STATUS = 10; // 最多尝试10次
+let lastCommand = '';
 
 Page({
 	data: {
@@ -67,6 +68,8 @@ Page({
 				this.setData({
 					defaultCommand: data.play_command,
 					playCommand: '',
+					btnText: '',
+					servicePrice: '0.00',
 					serviceChargeRate: data.service_charge_rate,
 					money: this.getFloatStr(data.money),
 				})
@@ -139,10 +142,10 @@ Page({
 			});
 		}
 		
-		
-		if (((1 + this.data.serviceChargeRate) * (this.data.redPackMoney * 1000) - (this.data.money * 1000)) / 1000 > 0) {
+		console.log(((this.data.servicePrice * 100) + (this.data.redPackMoney * 100) - (this.data.money * 100)) / 100);
+		if ( ((this.data.servicePrice * 100) + (this.data.redPackMoney * 100) - (this.data.money * 100)) / 100 > 0 ) {
 			this.setData({
-				btnText: `还需支付${this.getFloatStr(((1 + this.data.serviceChargeRate) * (this.data.redPackMoney * 1000) - (this.data.money * 1000)) / 1000)}元`
+				btnText: `还需支付${this.getFloatStr(((this.data.servicePrice * 100) + (this.data.redPackMoney * 100) - (this.data.money * 100)) / 100)}元`
 			})
 		} else {
 			this.setData({
@@ -225,6 +228,7 @@ Page({
 			'paySign': payInfo.pay_sign,
 			'signType': payInfo.sign_type,
 			'success': function(res) {
+				lastCommand = that.data.playCommand;
 				setTimeout(() => {
 					that.getPayStatus(payInfo.redpacket_send_id);
 				}, 1000);
@@ -263,8 +267,9 @@ Page({
 			},
 			successCb: (res) => {
 				if (res.data) {
+					console.log(this.data);
 					wx.navigateTo({
-						url: `/pages/share/share?command=${encodeURI(this.data.playCommand).toLowerCase()}&redpacket_send_id=${redpacketSendId}`
+						url: `/pages/share/share?command=${encodeURI(lastCommand).toLowerCase()}&redpacket_send_id=${redpacketSendId}`
 					});
 				} else {
 					getPayStatusCount = getPayStatusCount + 1;

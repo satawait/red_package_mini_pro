@@ -34,7 +34,7 @@ Page({
 			brandCode: options.from_success_list ? options.brand_code : app.globalData.brandCode,
 			brandLogo: options.from_success_list ? Base64.decode(options.brand_dark_logo) : app.globalData.brandInfo.brand_big_dark_logo
 		});
-
+		console.log(options);
 		const commandText = decodeURI(options.command);
 		const redpacketSendId = decodeURI(options.redpacket_send_id);
 

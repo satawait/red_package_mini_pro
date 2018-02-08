@@ -34,6 +34,7 @@ Page({
 			brandCode: options.from_success_list ? options.brand_code : app.globalData.brandCode,
 			brandLogo: options.from_success_list ? Base64.decode(options.brand_dark_logo) : app.globalData.brandInfo.brand_big_dark_logo
 		});
+		console.log(this.data.brandLogo);
 		console.log(options);
 		const commandText = decodeURI(options.command);
 		const redpacketSendId = decodeURI(options.redpacket_send_id);
@@ -58,9 +59,8 @@ Page({
 		});
 		console.log(sceneArg);
 		const miniProCode = `${CONFIG.interfaceDomin}${CONFIG.interfaceList.CREATE_MINI_PRO_CODE}/${pathArg}&${widthArg}&${sceneArg}`;
-		console.log(miniProCode);
 		const thumb = `${CONFIG.interfaceDomin}${CONFIG.interfaceList.PROXY_GET}/${thumbArg}`;
-		const brandLogo = `${CONFIG.interfaceDomin}${CONFIG.interfaceList.PROXY_GET}/${brandLogoArg}`;
+		const brandLogo = brandLogoArg ? `${CONFIG.interfaceDomin}${CONFIG.interfaceList.PROXY_GET}/${brandLogoArg}` : '';
 		console.log(brandLogo);
 		this.setData({
 			miniProCode: miniProCode,
@@ -92,26 +92,39 @@ Page({
 	initLogo: function(cb) {
 		const that = this;
 		wx.createSelectorQuery().in(this).select('.brand_logo').boundingClientRect(function(rect) {
+			console.log(rect, '--------');
 			if (rect) {
+				console.log(112233);
 				that.setData({
 					brandLogoHeight: rect.bottom - rect.top
 				})
-				wx.getImageInfo({
-					// src: that.data.brandInfo.brand_big_dark_logo,
-					src: that.data.brandLogo,
-					success: (res) => {
-						that.setData({
-							brandLogoWidth: res.width * (that.data.brandLogoHeight / res.height)
-						})
-
-						that.drawImage('miniProCodeCanvasHide', '/images/share/share_bg.jpg', () => {
+				if (that.data.brandLogo) {
+					wx.getImageInfo({
+						// src: that.data.brandInfo.brand_big_dark_logo,
+						src: that.data.brandLogo,
+						success: (res) => {
+							console.log(123);
 							that.setData({
-								isCanvasReady: true
-							});
-							typeof that.canvasReadyCb === 'function' && that.canvasReadyCb();
-						})
-					}
-				})
+								brandLogoWidth: res.width * (that.data.brandLogoHeight / res.height)
+							})
+
+							that.drawImage('miniProCodeCanvasHide', '/images/share/share_bg.jpg', () => {
+								that.setData({
+									isCanvasReady: true
+								});
+								typeof that.canvasReadyCb === 'function' && that.canvasReadyCb();
+							})
+						}
+					})
+				} else {
+					that.drawImage('miniProCodeCanvasHide', '/images/share/share_bg.jpg', () => {
+						that.setData({
+							isCanvasReady: true
+						});
+						console.log(that.data);
+						typeof that.canvasReadyCb === 'function' && that.canvasReadyCb();
+					})
+				}
 			}
 		}).exec();
 	},
@@ -129,8 +142,12 @@ Page({
 				const avatarX = Math.floor(canvasWidth / 2); // 绘制圆形头像区域的圆点x
 				const avatarY = Math.floor(canvasHeight * 0.036 + avatarWidth / 2); // 绘制圆形头像区域的圆点y
 
-				const brandLogoX = (canvasWidth - that.data.brandLogoWidth) / 2;
-				const brandLogoY = canvasHeight * 0.72;
+				if (that.data.brandLogoWidth) {
+					var brandLogoX = (canvasWidth - that.data.brandLogoWidth) / 2;
+					var brandLogoY = canvasHeight * 0.72;
+				}
+
+				
 
 				const miniProCodeWidth = Math.floor(0.28 * canvasWidth);
 				const miniProCodeX = Math.floor(canvasWidth / 2);
@@ -162,6 +179,8 @@ Page({
 						wx.downloadFile({
 							url: that.data.brandLogo,
 							success(down_res) {
+								console.log(that.data.brandLogo);
+								console.log(778);
 								const brandLogoFilePath = down_res.tempFilePath;
 
 								ctx.drawImage(brandLogoFilePath, brandLogoX, brandLogoY, that.data.brandLogoWidth, that.data.brandLogoHeight);
@@ -174,6 +193,17 @@ Page({
 								// 	lineWidth: 0,
 								// 	borderColor: '#bb2b2a'
 								// });
+
+								ctx.draw(false, () => {
+									typeof cb === 'function' && cb();
+								});
+							},
+							fail: (err) => {
+								console.log(887);
+								that.drawCircle(ctx, thumbFilePath, avatarX, avatarY, avatarWidth / 2, {
+									lineWidth: 3,
+									borderColor: '#d87348'
+								});
 
 								ctx.draw(false, () => {
 									typeof cb === 'function' && cb();
@@ -233,6 +263,7 @@ Page({
 	},
 
 	handleShowBigImg: function(e) {
+		console.log(this.data.isCanvasReady);
 		if (!this.data.isCanvasReady) {
 			wx.showLoading({
 				title: '图片生成中'
